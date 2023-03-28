@@ -1,6 +1,7 @@
 package com.example.appunistaller
 
 import android.content.pm.ApplicationInfo
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -9,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.appunistaller.databinding.ActivityMainBinding
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), AppController {
 
     private lateinit var binding : ActivityMainBinding
 
@@ -23,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupRv() {
         binding.recyclerView.apply {
             if(adapter == null) {
-                adapter = CustomAdapter(getInstalledApps())
+                adapter = CustomAdapter(getInstalledApps(), this@MainActivity)
                 layoutManager = LinearLayoutManager(this@MainActivity, RecyclerView.VERTICAL, false)
             }
         }
@@ -33,22 +34,36 @@ class MainActivity : AppCompatActivity() {
 
         val applicationsPack =
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                packageManager.getInstalledApplications(PackageManager.ApplicationInfoFlags.of(PackageManager.GET_META_DATA.toLong()))
+                packageManager.getInstalledPackages(PackageManager.PackageInfoFlags.of(PackageManager.GET_META_DATA.toLong()))
             } else {
-                packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+                packageManager.getInstalledPackages(PackageManager.GET_META_DATA)
             }
 
         val pack = mutableListOf<PackageInfoContainer>()
-        for (applications in applicationsPack) {
-            if (applications.flags and ApplicationInfo.FLAG_SYSTEM != 1) {
+        for (packageInfo in applicationsPack) {
+            if (packageInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 1) {
                 pack.add(
                     PackageInfoContainer(
-                        name = applications.loadLabel(packageManager).toString(),
-                        icon = applications.loadIcon(packageManager),
+                        name = packageInfo.applicationInfo.loadLabel(packageManager).toString(),
+                        icon = packageInfo.applicationInfo.loadUnbadgedIcon(packageManager),
+                        packageInfo = packageInfo,
+                        appVersion = packageInfo.versionName
                     )
                 )
             }
         }
         return pack
+    }
+
+    override fun handleActionButton(packageInfo: PackageInfo) {
+        AppActionContainerActivity.startActivity(this)
+    }
+
+    override fun uninstallApp() {
+       // no - op
+    }
+
+    override fun getAppDetails() {
+        // no - op
     }
 }
