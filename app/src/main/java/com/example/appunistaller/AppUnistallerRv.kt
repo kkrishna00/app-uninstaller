@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.appunistaller.databinding.AppActionContainerBinding
 import com.example.appunistaller.databinding.AppInfoContainerBinding
 
-class CustomAdapter(private val dataSet: List<PackageInfoContainer>, private val appController: AppController) :
+class CustomAdapter(private val dataSet: List<PackageInfoContainer>, private val mainActivityController: MainActivityController) :
     RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -25,7 +25,7 @@ class CustomAdapter(private val dataSet: List<PackageInfoContainer>, private val
         viewHolder.binding.appName.text = dataSet[position].name
         viewHolder.binding.appVersion.text = dataSet[position].appVersion
         viewHolder.binding.actionButton.setOnClickListener {
-            appController.handleActionButton(dataSet[position].packageInfo)
+            mainActivityController.handleActionButton(dataSet[position].packageInfo)
         }
         dataSet[position].icon?.let { viewHolder.binding.ImageView.setImageDrawable(it) }
     }
@@ -67,6 +67,26 @@ class ActionContainerAdapter(private val dataSet: List<AppActionsContainer>, pri
         }
         viewHolder.binding.actionImage.setImageResource(imageResource)
         viewHolder.binding.actionText.text = dataSet[position].getActionType()
+
+        viewHolder.binding.root.setOnClickListener {
+            when(dataSet[position].name) {
+                AppActionsContainer.ActionType.UNINSTALL -> {
+                    appController.uninstallApp()
+                }
+                AppActionsContainer.ActionType.DETAILS -> {
+                    appController.getAppDetails()
+                }
+                AppActionsContainer.ActionType.ADD_SHORTCUT -> {
+                    appController.createShortcutOnHomeScreen()
+                }
+                AppActionsContainer.ActionType.GO_TO_PLAY_STORE -> {
+                    appController.searchOnGooglePlay()
+                }
+                AppActionsContainer.ActionType.LAUNCH -> {
+                    appController.launchApp()
+                }
+            }
+        }
     }
 
     override fun getItemCount() = dataSet.size

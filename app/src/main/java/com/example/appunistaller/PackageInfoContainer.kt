@@ -8,10 +8,8 @@ import kotlinx.parcelize.Parcelize
 
 data class PackageInfoContainer(val name: String?, val icon: Drawable?, val packageInfo: PackageInfo, val appVersion: String)
 
-interface AppController {
+interface MainActivityController {
     fun handleActionButton(packageInfo: PackageInfo)
-    fun uninstallApp()
-    fun getAppDetails()
 }
 
 @Parcelize
@@ -31,4 +29,12 @@ data class AppActionsContainer(
     enum class ActionType : Parcelable {
         DETAILS, UNINSTALL, GO_TO_PLAY_STORE, LAUNCH, ADD_SHORTCUT
     }
+}
+
+interface AppController {
+    fun uninstallApp()
+    fun getAppDetails()
+    fun createShortcutOnHomeScreen()
+    fun searchOnGooglePlay()
+    fun launchApp()
 }

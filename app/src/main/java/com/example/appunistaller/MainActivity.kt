@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.appunistaller.databinding.ActivityMainBinding
 
 
-class MainActivity : AppCompatActivity(), AppController {
+class MainActivity : AppCompatActivity(), MainActivityController {
 
     private lateinit var binding : ActivityMainBinding
 
@@ -57,13 +57,5 @@ class MainActivity : AppCompatActivity(), AppController {
 
     override fun handleActionButton(packageInfo: PackageInfo) {
         AppActionContainerActivity.startActivity(this, screenData = ScreenData(packageInfo))
-    }
-
-    override fun uninstallApp() {
-       // no - op
-    }
-
-    override fun getAppDetails() {
-        // no - op
     }
 }
