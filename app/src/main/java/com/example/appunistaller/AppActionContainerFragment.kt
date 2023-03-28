@@ -1,17 +1,23 @@
 package com.example.appunistaller
 
-import android.R
 import android.app.Activity
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.pm.ShortcutInfoCompat
+import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.core.graphics.drawable.IconCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -79,6 +85,7 @@ class AppActionContainerFragment : Fragment(), AppController {
                         AppActionsContainer(AppActionsContainer.ActionType.DETAILS),
                         AppActionsContainer(AppActionsContainer.ActionType.UNINSTALL),
                         AppActionsContainer(AppActionsContainer.ActionType.GO_TO_PLAY_STORE),
+                        AppActionsContainer(AppActionsContainer.ActionType.ADD_SHORTCUT)
                     ), this@AppActionContainerFragment
                 )
                 layoutManager = LinearLayoutManager(
@@ -146,30 +153,67 @@ class AppActionContainerFragment : Fragment(), AppController {
     }
 
     override fun createShortcutOnHomeScreen() {
-        createShortCut()
+        screenData?.packageInfo?.let {
+            activity?.packageManager?.let { packageManager ->
+                createAppShortCut(
+                    context = requireContext(),
+                    appName = it.applicationInfo.loadLabel(packageManager).toString(),
+                    packageName = it.packageName,
+                    icon = it.applicationInfo.loadIcon(packageManager)
+                )
+            }
+        }
         finishActivity()
     }
 
-    fun createShortCut() {
-        val appName = activity?.packageManager?.let {
-            screenData?.packageInfo?.applicationInfo?.loadLabel(
-                it
+    private fun drawableToBitmap(drawable: Drawable): Bitmap? {
+        var bitmap: Bitmap? = null
+        if (drawable is BitmapDrawable) {
+            if (drawable.bitmap != null) {
+                return drawable.bitmap
+            }
+        }
+        bitmap = if (drawable.intrinsicWidth <= 0 || drawable.intrinsicHeight <= 0) {
+            Bitmap.createBitmap(
+                1,
+                1,
+                Bitmap.Config.ARGB_8888
+            ) // Single color bitmap will be created of 1x1 pixel
+        } else {
+            Bitmap.createBitmap(
+                drawable.intrinsicWidth,
+                drawable.intrinsicHeight,
+                Bitmap.Config.ARGB_8888
             )
         }
-        val appIcon = activity?.packageManager?.let {
-            screenData?.packageInfo?.applicationInfo?.loadIcon(
-                it
-            )
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, canvas.width, canvas.height)
+        drawable.draw(canvas)
+        return bitmap
+    }
+
+    private fun createAppShortCut(
+        context: Context, appName: String?, packageName: String?, icon: Drawable
+    ) {
+        if (ShortcutManagerCompat.isRequestPinShortcutSupported(context)) {
+            val shortcutInfoCompat = packageName?.let { pack ->
+                activity?.packageManager?.getLaunchIntentForPackage(
+                    pack
+                )?.let { intent ->
+                    ShortcutInfoCompat.Builder(requireContext(), pack)
+                        .setIntent(Intent(Intent.EXTRA_SHORTCUT_INTENT, Uri.parse(packageName)))
+                        .setIntent(intent).setShortLabel(appName!!)
+                        .setIcon(drawableToBitmap(icon)?.let { IconCompat.createWithBitmap(it) })
+                        .build()
+                }
+            }
+            if (shortcutInfoCompat != null) {
+                ShortcutManagerCompat.requestPinShortcut(context, shortcutInfoCompat, null)
+            }
+        } else {
+            Toast.makeText(context, "launcher does not support short cut icon", Toast.LENGTH_LONG)
+                .show()
         }
-        val packageName = screenData?.packageInfo?.packageName
-        val shortcutIntent = Intent("com.android.launcher.action.INSTALL_SHORTCUT")
-        shortcutIntent.putExtra("duplicate", false)
-        shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, appName)
-        val icon: Parcelable =
-            Intent.ShortcutIconResource.fromContext(requireContext(), R.mipmap.sym_def_app_icon)
-        shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon)
-        shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, Intent(packageName))
-        requireContext().sendBroadcast(shortcutIntent)
     }
 
     override fun searchOnGooglePlay() {
