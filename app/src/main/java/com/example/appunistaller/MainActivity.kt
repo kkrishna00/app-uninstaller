@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity(), AppController {
     }
 
     override fun handleActionButton(packageInfo: PackageInfo) {
-        AppActionContainerActivity.startActivity(this)
+        AppActionContainerActivity.startActivity(this, screenData = ScreenData(packageInfo))
     }
 
     override fun uninstallApp() {

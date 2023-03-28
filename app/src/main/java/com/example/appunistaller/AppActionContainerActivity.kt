@@ -2,18 +2,31 @@ package com.example.appunistaller
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Parcelable
+import androidx.versionedparcelable.ParcelField
 import com.example.appunistaller.databinding.ActivityAppActionContainerLayoutBinding
+import kotlinx.parcelize.Parcelize
 
 class AppActionContainerActivity : AppCompatActivity() {
 
 
     private lateinit var binding: ActivityAppActionContainerLayoutBinding
 
+    private val screenData: ScreenData by lazy(LazyThreadSafetyMode.NONE) {
+        intent.extras?.getParcelable(SCREEN_DATA)!!
+    }
+
     companion object {
-        fun startActivity(context: Context) {
-            val intent = Intent(context, AppActionContainerActivity::class.java)
+        private const val SCREEN_DATA = "SCREEN_DATA"
+        fun startActivity(context: Context, screenData: ScreenData) {
+            val intent = Intent(context, AppActionContainerActivity::class.java).apply {
+                val bundle = Bundle()
+                bundle.putParcelable(SCREEN_DATA, screenData)
+                putExtras(bundle)
+            }
             context.startActivity(intent)
         }
     }
@@ -22,6 +35,12 @@ class AppActionContainerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAppActionContainerLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        supportFragmentManager.beginTransaction().replace(binding.container.id, AppActionContainerFragment.newInstance("krishna","kumar")).commit()
+        supportFragmentManager.beginTransaction().replace(
+            binding.container.id,
+            AppActionContainerFragment.newInstance(screenData)
+        ).commit()
     }
 }
+
+@Parcelize
+data class ScreenData(val packageInfo: PackageInfo) : java.io.Serializable, Parcelable
