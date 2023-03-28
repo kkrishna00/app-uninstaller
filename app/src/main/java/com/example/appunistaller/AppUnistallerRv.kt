@@ -60,16 +60,16 @@ class ActionContainerAdapter(private val dataSet: List<AppActionsContainer>, pri
                 R.mipmap.delete_icon
             }
             AppActionsContainer.ActionType.DETAILS -> {
-                R.mipmap.delete_icon
+                R.mipmap.info_icon
             }
             AppActionsContainer.ActionType.ADD_SHORTCUT -> {
-                R.mipmap.delete_icon
+                R.mipmap.shortcut_icon
             }
             AppActionsContainer.ActionType.GO_TO_PLAY_STORE -> {
-                R.mipmap.delete_icon
+                R.mipmap.search_icon
             }
             AppActionsContainer.ActionType.LAUNCH -> {
-                R.mipmap.delete_icon
+                R.mipmap.launch_icon
             }
         }
         viewHolder.binding.actionImage.setImageResource(imageResource)
