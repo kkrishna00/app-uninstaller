@@ -13,7 +13,6 @@ class CustomAdapter(private val dataSet: List<PackageInfoContainer>, val appCont
         val binding = AppInfoContainerBinding.bind(view)
     }
 
-    // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         // Create a new view, which defines the UI of the list item
         val view = LayoutInflater.from(viewGroup.context)
@@ -22,7 +21,6 @@ class CustomAdapter(private val dataSet: List<PackageInfoContainer>, val appCont
         return ViewHolder(view)
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
@@ -35,6 +33,5 @@ class CustomAdapter(private val dataSet: List<PackageInfoContainer>, val appCont
         dataSet[position].icon?.let { viewHolder.binding.ImageView.setImageDrawable(it) }
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = dataSet.size
 }

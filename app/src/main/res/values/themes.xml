@@ -13,4 +13,14 @@
         <item name="android:statusBarColor">#009688</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="TransParentActivity" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:screenOrientation">unspecified</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:statusBarColor">@color/background_overlay</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+    </style>
 </resources>
