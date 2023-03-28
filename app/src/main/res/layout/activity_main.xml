@@ -16,6 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:textSize="16sp"
         android:textColor="@color/white"
+        android:fontFamily="sans-serif-condensed-medium"
         android:text="@string/installed_apps"
         android:layout_height="wrap_content"/>
 
