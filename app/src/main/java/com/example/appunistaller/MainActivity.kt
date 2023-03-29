@@ -98,8 +98,8 @@ object MemoryStatus {
         get() {
             val path = Environment.getDataDirectory()
             val stat = StatFs(path.path)
-            val blockSize = stat.blockSize.toLong()
-            val availableBlocks = stat.availableBlocks.toLong()
+            val blockSize = stat.blockSizeLong
+            val availableBlocks = stat.availableBlocksLong
             return availableBlocks * blockSize
         }
 
@@ -107,8 +107,8 @@ object MemoryStatus {
         get() {
             val path = Environment.getDataDirectory()
             val stat = StatFs(path.path)
-            val blockSize = stat.blockSize.toLong()
-            val totalBlocks = stat.blockCount.toLong()
+            val blockSize = stat.blockSizeLong
+            val totalBlocks = stat.blockCountLong
             return totalBlocks * blockSize
         }
 
@@ -116,8 +116,8 @@ object MemoryStatus {
         get() = if (externalMemoryAvailable()) {
             val path = Environment.getExternalStorageDirectory()
             val stat = StatFs(path.path)
-            val blockSize = stat.blockSize.toLong()
-            val availableBlocks = stat.availableBlocks.toLong()
+            val blockSize = stat.blockSizeLong
+            val availableBlocks = stat.availableBlocksLong
             availableBlocks * blockSize
         } else {
             ERROR.toLong()
@@ -128,8 +128,8 @@ object MemoryStatus {
             return if (externalMemoryAvailable()) {
                 val path = Environment.getExternalStorageDirectory()
                 val stat = StatFs(path.path)
-                val blockSize = stat.blockSize.toLong()
-                val totalBlocks = stat.blockCount.toLong()
+                val blockSize = stat.blockSizeLong
+                val totalBlocks = stat.blockCountLong
                 totalBlocks * blockSize
             } else {
                 ERROR.toLong()
