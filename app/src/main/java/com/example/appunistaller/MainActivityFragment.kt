@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.appunistaller.databinding.FragmentAppContainerBinding
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.parcelize.Parcelize
 
 private const val SCREEN_DATA = "SCREEN_DATA"
@@ -53,6 +54,14 @@ class MainActivityFragment : Fragment(), MainActivityController {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initRv()
+        showSnackBar()
+    }
+
+    private fun showSnackBar() {
+        if(screenData?.userApp == false) {
+            Snackbar.make(binding.root, "CANNOT UNINSTALL SYSTEM APPS", Snackbar.LENGTH_SHORT)
+                .show()
+        }
     }
 
     private fun initRv() {
@@ -126,10 +135,10 @@ class DemoCollectionPagerAdapter(
     override fun getPageTitle(position: Int): CharSequence {
         return when (position) {
             0 -> {
-                "USER APPS"
+                "${screenData.userApps.size} USER APPS"
             }
             1 -> {
-                "SYSTEM APPS"
+                "${screenData.systemApps.size} SYSTEM APPS"
             }
             else -> {
                 "INVALID"
