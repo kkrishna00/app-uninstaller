@@ -2,10 +2,6 @@ package com.example.appunistaller
 
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Environment
 import android.os.StatFs
@@ -80,6 +76,10 @@ class MainActivity : AppCompatActivity() {
                     )
                 )
             }
+        }
+        binding.title.text = buildString {
+            append(systemPack.size + userPack.size)
+            append(" INSTALLED APPS")
         }
         return ViewPagerAdapterScreenData(
             systemApps = systemPack,
