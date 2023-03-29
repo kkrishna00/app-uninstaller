@@ -35,12 +35,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupRv() {
-        binding.recyclerView.apply {
-            if(adapter == null) {
-                adapter = DemoCollectionPagerAdapter(supportFragmentManager, getInstalledApps())
+        try {
+            binding.recyclerView.apply {
+                if (adapter == null) {
+                    adapter = DemoCollectionPagerAdapter(supportFragmentManager, getInstalledApps())
+                }
             }
+            binding.tabLayout.setupWithViewPager(binding.recyclerView)
+        } catch (exception: java.lang.Exception) {
+            exception.printStackTrace()
         }
-        binding.tabLayout.setupWithViewPager(binding.recyclerView)
     }
 
     private fun getInstalledApps(): ViewPagerAdapterScreenData {
@@ -56,25 +60,35 @@ class MainActivity : AppCompatActivity() {
         val systemPack = mutableListOf<PackageInfoContainer>()
         for (packageInfo in applicationsPack) {
             if (packageInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 1) {
-                userPack.add(
-                    PackageInfoContainer(
-                        name = packageInfo.applicationInfo.loadLabel(packageManager).toString(),
-                        packageInfo = packageInfo,
-                        appVersion = packageInfo.versionName,
-                        packageSize = File(packageInfo.applicationInfo.sourceDir).length()
-                            .bytesToHuman()
+                try {
+                    userPack.add(
+                        PackageInfoContainer(
+                            name = packageInfo.applicationInfo.loadLabel(packageManager).toString(),
+                            packageInfo = packageInfo,
+                            appVersion = packageInfo.versionName,
+                            packageSize = File(packageInfo.applicationInfo.sourceDir).length()
+                                .bytesToHuman()
+                        )
                     )
-                )
+                } catch (exception: java.lang.Exception) {
+                    exception.printStackTrace()
+                }
+
             } else {
-                systemPack.add(
-                    PackageInfoContainer(
-                        name = packageInfo.applicationInfo.loadLabel(packageManager).toString(),
-                        packageInfo = packageInfo,
-                        appVersion = packageInfo.versionName,
-                        packageSize = File(packageInfo.applicationInfo.sourceDir).length()
-                            .bytesToHuman(),
+                try {
+                    systemPack.add(
+                        PackageInfoContainer(
+                            name = packageInfo.applicationInfo.loadLabel(packageManager).toString(),
+                            packageInfo = packageInfo,
+                            appVersion = packageInfo.versionName,
+                            packageSize = File(packageInfo.applicationInfo.sourceDir).length()
+                                .bytesToHuman(),
+                        )
                     )
-                )
+                } catch (exception: java.lang.Exception) {
+                    exception.printStackTrace()
+                }
+
             }
         }
         binding.title.text = buildString {
