@@ -3,19 +3,21 @@ package com.example.appunistaller
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Environment
 import android.os.StatFs
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.appunistaller.MemoryStatus.bytesToHuman
 import com.example.appunistaller.databinding.ActivityMainBinding
 import java.io.File
 import java.text.DecimalFormat
 
 
-class MainActivity : AppCompatActivity(), MainActivityController {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityMainBinding
 
@@ -40,13 +42,13 @@ class MainActivity : AppCompatActivity(), MainActivityController {
     private fun setupRv() {
         binding.recyclerView.apply {
             if(adapter == null) {
-                adapter = CustomAdapter(getInstalledApps(), this@MainActivity)
-                layoutManager = LinearLayoutManager(this@MainActivity, RecyclerView.VERTICAL, false)
+                adapter = DemoCollectionPagerAdapter(supportFragmentManager, getInstalledApps())
             }
         }
+        binding.tabLayout.setupWithViewPager(binding.recyclerView)
     }
 
-    private fun getInstalledApps(): List<PackageInfoContainer> {
+    private fun getInstalledApps(): ViewPagerAdapterScreenData {
 
         val applicationsPack =
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
@@ -55,25 +57,63 @@ class MainActivity : AppCompatActivity(), MainActivityController {
                 packageManager.getInstalledPackages(PackageManager.GET_META_DATA)
             }
 
-        val pack = mutableListOf<PackageInfoContainer>()
+        val userPack = mutableListOf<PackageInfoContainer>()
+        val systemPack = mutableListOf<PackageInfoContainer>()
         for (packageInfo in applicationsPack) {
             if (packageInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 1) {
-                pack.add(
+                userPack.add(
                     PackageInfoContainer(
                         name = packageInfo.applicationInfo.loadLabel(packageManager).toString(),
-                        icon = packageInfo.applicationInfo.loadUnbadgedIcon(packageManager),
+                        icon = drawableToBitmap(packageInfo.applicationInfo.loadUnbadgedIcon(packageManager)),
                         packageInfo = packageInfo,
                         appVersion = packageInfo.versionName,
-                        packageSize = File(packageInfo.applicationInfo.sourceDir).length().bytesToHuman()
+                        packageSize = File(packageInfo.applicationInfo.sourceDir).length()
+                            .bytesToHuman()
+                    )
+                )
+            } else {
+                systemPack.add(
+                    PackageInfoContainer(
+                        name = packageInfo.applicationInfo.loadLabel(packageManager).toString(),
+                        packageInfo = packageInfo,
+                        appVersion = packageInfo.versionName,
+                        packageSize = File(packageInfo.applicationInfo.sourceDir).length()
+                            .bytesToHuman(),
+                        icon = drawableToBitmap(packageInfo.applicationInfo.loadUnbadgedIcon(packageManager)),
                     )
                 )
             }
         }
-        return pack
+        return ViewPagerAdapterScreenData(
+            systemApps = systemPack,
+            userApps = userPack
+        )
     }
 
-    override fun handleActionButton(packageInfo: PackageInfo) {
-        AppActionContainerActivity.startActivity(this, screenData = ScreenData(packageInfo))
+    private fun drawableToBitmap(drawable: Drawable): Bitmap? {
+        var bitmap: Bitmap? = null
+        if (drawable is BitmapDrawable) {
+            if (drawable.bitmap != null) {
+                return drawable.bitmap
+            }
+        }
+        bitmap = if (drawable.intrinsicWidth <= 0 || drawable.intrinsicHeight <= 0) {
+            Bitmap.createBitmap(
+                1,
+                1,
+                Bitmap.Config.ARGB_8888
+            ) // Single color bitmap will be created of 1x1 pixel
+        } else {
+            Bitmap.createBitmap(
+                drawable.intrinsicWidth,
+                drawable.intrinsicHeight,
+                Bitmap.Config.ARGB_8888
+            )
+        }
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, canvas.width, canvas.height)
+        drawable.draw(canvas)
+        return bitmap
     }
 }
 
