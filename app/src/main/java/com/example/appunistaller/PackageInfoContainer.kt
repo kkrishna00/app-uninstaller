@@ -3,10 +3,15 @@ package com.example.appunistaller
 import android.content.pm.PackageInfo
 import android.graphics.drawable.Drawable
 import android.os.Parcelable
-import kotlinx.coroutines.internal.PrepareOp
 import kotlinx.parcelize.Parcelize
 
-data class PackageInfoContainer(val name: String?, val icon: Drawable?, val packageInfo: PackageInfo, val appVersion: String)
+data class PackageInfoContainer(
+    val name: String?,
+    val icon: Drawable?,
+    val packageInfo: PackageInfo,
+    val appVersion: String,
+    val packageSize: String
+)
 
 interface MainActivityController {
     fun handleActionButton(packageInfo: PackageInfo)
@@ -23,11 +28,12 @@ data class AppActionsContainer(
         ActionType.UNINSTALL -> "Uninstall"
         ActionType.GO_TO_PLAY_STORE -> "Search on Google Play"
         ActionType.LAUNCH -> "Launch"
+        ActionType.UPDATE -> "Update"
     }
 
     @Parcelize
     enum class ActionType : Parcelable {
-        DETAILS, UNINSTALL, GO_TO_PLAY_STORE, LAUNCH, ADD_SHORTCUT
+        DETAILS, UNINSTALL, GO_TO_PLAY_STORE, LAUNCH, ADD_SHORTCUT, UPDATE
     }
 }
 

@@ -23,7 +23,12 @@ class CustomAdapter(private val dataSet: List<PackageInfoContainer>, private val
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.binding.appName.text = dataSet[position].name
-        viewHolder.binding.appVersion.text = dataSet[position].appVersion
+
+        viewHolder.binding.appVersion.text = buildString {
+            append(dataSet[position].packageSize)
+            append(" \u2022 ")
+            append(dataSet[position].appVersion)
+        }
         viewHolder.binding.actionButton.setOnClickListener {
             mainActivityController.handleActionButton(dataSet[position].packageInfo)
         }
@@ -64,7 +69,11 @@ class ActionContainerAdapter(private val dataSet: List<AppActionsContainer>, pri
             AppActionsContainer.ActionType.LAUNCH -> {
                 R.mipmap.launch_icon
             }
+            AppActionsContainer.ActionType.UPDATE -> {
+                R.mipmap.update_icon
+            }
         }
+
         viewHolder.binding.actionImage.setImageResource(imageResource)
         viewHolder.binding.actionText.text = dataSet[position].getActionType()
 
@@ -84,6 +93,9 @@ class ActionContainerAdapter(private val dataSet: List<AppActionsContainer>, pri
                 }
                 AppActionsContainer.ActionType.LAUNCH -> {
                     appController.launchApp()
+                }
+                AppActionsContainer.ActionType.UPDATE -> {
+                    appController.searchOnGooglePlay()
                 }
             }
         }

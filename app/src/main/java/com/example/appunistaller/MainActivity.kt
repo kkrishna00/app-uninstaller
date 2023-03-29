@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.appunistaller.MemoryStatus.bytesToHuman
 import com.example.appunistaller.databinding.ActivityMainBinding
+import java.io.File
 import java.text.DecimalFormat
 
 
@@ -62,7 +63,8 @@ class MainActivity : AppCompatActivity(), MainActivityController {
                         name = packageInfo.applicationInfo.loadLabel(packageManager).toString(),
                         icon = packageInfo.applicationInfo.loadUnbadgedIcon(packageManager),
                         packageInfo = packageInfo,
-                        appVersion = packageInfo.versionName
+                        appVersion = packageInfo.versionName,
+                        packageSize = File(packageInfo.applicationInfo.sourceDir).length().bytesToHuman()
                     )
                 )
             }

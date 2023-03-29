@@ -22,6 +22,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.appunistaller.databinding.FragmentAppActionContainerBinding
+import java.text.DateFormat
+import java.util.*
 
 
 class AppActionContainerFragment : Fragment(), AppController {
@@ -68,11 +70,18 @@ class AppActionContainerFragment : Fragment(), AppController {
 
     private fun initData() {
         screenData?.packageInfo?.let {
+            val firstInstallTime = it.firstInstallTime
+            val simple: DateFormat = DateFormat.getDateTimeInstance()
+            val result = Date(firstInstallTime)
+            binding.appInstallTime.text = simple.format(result)
             binding.ImageView.setImageDrawable(it.applicationInfo?.loadUnbadgedIcon(activity?.packageManager))
             binding.appName.text = activity?.packageManager?.let { it1 ->
                 it.applicationInfo.loadLabel(it1).toString()
             }
             binding.appVersion.text = it.versionName
+            binding.crossButton.setOnClickListener {
+                finishActivity()
+            }
         }
     }
 
@@ -84,8 +93,9 @@ class AppActionContainerFragment : Fragment(), AppController {
                         AppActionsContainer(AppActionsContainer.ActionType.LAUNCH),
                         AppActionsContainer(AppActionsContainer.ActionType.DETAILS),
                         AppActionsContainer(AppActionsContainer.ActionType.UNINSTALL),
+                        AppActionsContainer(AppActionsContainer.ActionType.UPDATE),
                         AppActionsContainer(AppActionsContainer.ActionType.GO_TO_PLAY_STORE),
-                        AppActionsContainer(AppActionsContainer.ActionType.ADD_SHORTCUT)
+                        AppActionsContainer(AppActionsContainer.ActionType.ADD_SHORTCUT),
                     ), this@AppActionContainerFragment
                 )
                 layoutManager = LinearLayoutManager(
