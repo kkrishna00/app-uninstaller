@@ -16,12 +16,12 @@ import kotlinx.parcelize.Parcelize
 
 private const val SCREEN_DATA = "SCREEN_DATA"
 
-class AppContainerFragment : Fragment(), MainActivityController {
+class MainActivityFragment : Fragment(), MainActivityController {
 
     companion object {
         @JvmStatic
         fun newInstance(screenData: FragmentScreenData) =
-            AppContainerFragment().apply {
+            MainActivityFragment().apply {
                 val bundle = Bundle().apply {
                     putParcelable(SCREEN_DATA, screenData)
                 }
@@ -57,8 +57,9 @@ class AppContainerFragment : Fragment(), MainActivityController {
 
     private fun initRv() {
         binding.appContainerRv.apply {
-            if(adapter == null) {
-                adapter = screenData?.installedApps?.let { CustomAdapter(it, this@AppContainerFragment) }
+            if (adapter == null) {
+                adapter =
+                    screenData?.installedApps?.let { CustomAdapter(it, this@MainActivityFragment) }
                 layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             }
         }
@@ -67,7 +68,7 @@ class AppContainerFragment : Fragment(), MainActivityController {
     override fun handleActionButton(packageInfo: PackageInfo) {
         AppActionContainerActivity.startActivity(
             requireContext(),
-            screenData = ScreenData(packageInfo)
+            screenData = ScreenData(packageInfo, screenData?.userApp ?: false)
         )
     }
 }
@@ -85,7 +86,10 @@ data class FragmentScreenData(
 ) : java.io.Serializable, Parcelable
 
 
-class DemoCollectionPagerAdapter(fm: FragmentManager, private val screenData: ViewPagerAdapterScreenData) :
+class DemoCollectionPagerAdapter(
+    fm: FragmentManager,
+    private val screenData: ViewPagerAdapterScreenData
+) :
     FragmentStatePagerAdapter(fm) {
 
     override fun getCount(): Int = 2
@@ -93,7 +97,7 @@ class DemoCollectionPagerAdapter(fm: FragmentManager, private val screenData: Vi
     override fun getItem(position: Int): Fragment {
         return when (position) {
             0 -> {
-                AppContainerFragment.newInstance(
+                MainActivityFragment.newInstance(
                     screenData = FragmentScreenData(
                         installedApps = screenData.userApps,
                         userApp = true
@@ -101,7 +105,7 @@ class DemoCollectionPagerAdapter(fm: FragmentManager, private val screenData: Vi
                 )
             }
             1 -> {
-                AppContainerFragment.newInstance(
+                MainActivityFragment.newInstance(
                     screenData = FragmentScreenData(
                         installedApps = screenData.systemApps,
                         userApp = false
@@ -109,7 +113,7 @@ class DemoCollectionPagerAdapter(fm: FragmentManager, private val screenData: Vi
                 )
             }
             else -> {
-                AppContainerFragment.newInstance(
+                MainActivityFragment.newInstance(
                     screenData = FragmentScreenData(
                         installedApps = screenData.userApps,
                         userApp = true

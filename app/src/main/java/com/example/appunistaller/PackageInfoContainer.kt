@@ -1,14 +1,12 @@
 package com.example.appunistaller
 
 import android.content.pm.PackageInfo
-import android.graphics.Bitmap
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class PackageInfoContainer(
     val name: String?,
-    val icon: Bitmap?,
     val packageInfo: PackageInfo,
     val appVersion: String,
     val packageSize: String
