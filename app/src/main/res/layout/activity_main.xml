@@ -20,7 +20,7 @@
         android:text="@string/installed_apps"
         android:layout_height="wrap_content"/>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -28,7 +28,15 @@
         app:layout_constraintBottom_toTopOf="@id/memoryStatus"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title" />
+        app:layout_constraintTop_toBottomOf="@id/title">
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:background="@color/black"
+            app:tabSelectedTextColor="@color/teal_700"
+            app:tabTextColor="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </androidx.viewpager.widget.ViewPager>
 
     <TextView
         android:id="@+id/memoryStatus"

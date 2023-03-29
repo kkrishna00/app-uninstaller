@@ -32,7 +32,7 @@ class CustomAdapter(private val dataSet: List<PackageInfoContainer>, private val
         viewHolder.binding.actionButton.setOnClickListener {
             mainActivityController.handleActionButton(dataSet[position].packageInfo)
         }
-        dataSet[position].icon?.let { viewHolder.binding.ImageView.setImageDrawable(it) }
+        dataSet[position].icon?.let { viewHolder.binding.ImageView.setImageBitmap(it) }
     }
 
     override fun getItemCount() = dataSet.size

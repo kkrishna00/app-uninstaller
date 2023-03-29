@@ -1,17 +1,18 @@
 package com.example.appunistaller
 
 import android.content.pm.PackageInfo
-import android.graphics.drawable.Drawable
+import android.graphics.Bitmap
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class PackageInfoContainer(
     val name: String?,
-    val icon: Drawable?,
+    val icon: Bitmap?,
     val packageInfo: PackageInfo,
     val appVersion: String,
     val packageSize: String
-)
+) : Parcelable, java.io.Serializable
 
 interface MainActivityController {
     fun handleActionButton(packageInfo: PackageInfo)
