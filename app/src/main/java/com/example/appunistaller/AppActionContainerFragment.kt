@@ -149,11 +149,15 @@ class AppActionContainerFragment : Fragment(), AppController {
         val packageName = screenData?.packageInfo?.packageName
         packageName?.let {
             if (isAppInstalled(requireActivity(), packageName)) {
-                startActivity(
-                    activity?.packageManager?.getLaunchIntentForPackage(
-                        packageName
+                try {
+                    startActivity(
+                        activity?.packageManager?.getLaunchIntentForPackage(
+                            packageName
+                        )
                     )
-                )
+                } catch (exception : NullPointerException) {
+                    exception.printStackTrace()
+                }
             } else {
                 Toast.makeText(activity, "App not installed", Toast.LENGTH_SHORT).show()
             }
