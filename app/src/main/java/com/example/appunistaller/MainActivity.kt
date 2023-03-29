@@ -1,7 +1,6 @@
 package com.example.appunistaller
 
 import android.content.pm.ApplicationInfo
-import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -64,7 +63,6 @@ class MainActivity : AppCompatActivity() {
                 userPack.add(
                     PackageInfoContainer(
                         name = packageInfo.applicationInfo.loadLabel(packageManager).toString(),
-                        icon = drawableToBitmap(packageInfo.applicationInfo.loadUnbadgedIcon(packageManager)),
                         packageInfo = packageInfo,
                         appVersion = packageInfo.versionName,
                         packageSize = File(packageInfo.applicationInfo.sourceDir).length()
@@ -79,7 +77,6 @@ class MainActivity : AppCompatActivity() {
                         appVersion = packageInfo.versionName,
                         packageSize = File(packageInfo.applicationInfo.sourceDir).length()
                             .bytesToHuman(),
-                        icon = drawableToBitmap(packageInfo.applicationInfo.loadUnbadgedIcon(packageManager)),
                     )
                 )
             }

@@ -89,14 +89,7 @@ class AppActionContainerFragment : Fragment(), AppController {
         binding.actionListRv.apply {
             if (adapter == null) {
                 adapter = ActionContainerAdapter(
-                    dataSet = listOf(
-                        AppActionsContainer(AppActionsContainer.ActionType.LAUNCH),
-                        AppActionsContainer(AppActionsContainer.ActionType.DETAILS),
-                        AppActionsContainer(AppActionsContainer.ActionType.UNINSTALL),
-                        AppActionsContainer(AppActionsContainer.ActionType.UPDATE),
-                        AppActionsContainer(AppActionsContainer.ActionType.GO_TO_PLAY_STORE),
-                        AppActionsContainer(AppActionsContainer.ActionType.ADD_SHORTCUT),
-                    ), this@AppActionContainerFragment
+                    dataSet = getListOfActions(), this@AppActionContainerFragment
                 )
                 layoutManager = LinearLayoutManager(
                     this@AppActionContainerFragment.context,
@@ -105,6 +98,21 @@ class AppActionContainerFragment : Fragment(), AppController {
                 )
             }
         }
+    }
+
+    private fun getListOfActions(): List<AppActionsContainer> {
+        val list = mutableListOf(
+            AppActionsContainer(AppActionsContainer.ActionType.LAUNCH),
+            AppActionsContainer(AppActionsContainer.ActionType.DETAILS),
+            AppActionsContainer(AppActionsContainer.ActionType.UPDATE),
+            AppActionsContainer(AppActionsContainer.ActionType.GO_TO_PLAY_STORE),
+            AppActionsContainer(AppActionsContainer.ActionType.ADD_SHORTCUT),
+        )
+
+        if (screenData?.userApp == true) {
+            list.add(2, AppActionsContainer(AppActionsContainer.ActionType.UNINSTALL))
+        }
+        return list
     }
 
     override fun uninstallApp() {

@@ -6,7 +6,6 @@ import android.content.pm.PackageInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcelable
-import androidx.versionedparcelable.ParcelField
 import com.example.appunistaller.databinding.ActivityAppActionContainerLayoutBinding
 import kotlinx.parcelize.Parcelize
 
@@ -43,4 +42,4 @@ class AppActionContainerActivity : AppCompatActivity() {
 }
 
 @Parcelize
-data class ScreenData(val packageInfo: PackageInfo) : java.io.Serializable, Parcelable
+data class ScreenData(val packageInfo: PackageInfo, val userApp: Boolean) : java.io.Serializable, Parcelable
