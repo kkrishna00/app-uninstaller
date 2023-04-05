@@ -17,7 +17,7 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         lifecycleScope.launch {
-            delay(3000L)
+            delay(2500L)
             startActivity(Intent(this@SplashActivity, MainActivity::class.java))
         }
     }
