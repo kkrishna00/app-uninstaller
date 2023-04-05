@@ -7,8 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.appunistaller.adapter.CustomAdapter
@@ -22,12 +20,12 @@ import kotlinx.parcelize.Parcelize
 
 private const val SCREEN_DATA = "SCREEN_DATA"
 
-class MainActivityFragment : Fragment(), MainActivityController {
+class AppContainerFragment : Fragment(), MainActivityController {
 
     companion object {
         @JvmStatic
         fun newInstance(screenData: FragmentScreenData) =
-            MainActivityFragment().apply {
+            AppContainerFragment().apply {
                 val bundle = Bundle().apply {
                     putParcelable(SCREEN_DATA, screenData)
                 }
@@ -73,7 +71,7 @@ class MainActivityFragment : Fragment(), MainActivityController {
         binding.appContainerRv.apply {
             if (adapter == null) {
                 adapter =
-                    screenData?.installedApps?.let { CustomAdapter(it, this@MainActivityFragment) }
+                    screenData?.installedApps?.let { CustomAdapter(it, this@AppContainerFragment) }
                 layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             }
         }
@@ -100,54 +98,3 @@ data class FragmentScreenData(
 ) : java.io.Serializable, Parcelable
 
 
-class DemoCollectionPagerAdapter(
-    fm: FragmentManager,
-    private val screenData: ViewPagerAdapterScreenData
-) :
-    FragmentStatePagerAdapter(fm) {
-
-    override fun getCount(): Int = 2
-
-    override fun getItem(position: Int): Fragment {
-        return when (position) {
-            0 -> {
-                MainActivityFragment.newInstance(
-                    screenData = FragmentScreenData(
-                        installedApps = screenData.userApps,
-                        userApp = true
-                    )
-                )
-            }
-            1 -> {
-                MainActivityFragment.newInstance(
-                    screenData = FragmentScreenData(
-                        installedApps = screenData.systemApps,
-                        userApp = false
-                    )
-                )
-            }
-            else -> {
-                MainActivityFragment.newInstance(
-                    screenData = FragmentScreenData(
-                        installedApps = screenData.userApps,
-                        userApp = true
-                    )
-                )
-            }
-        }
-    }
-
-    override fun getPageTitle(position: Int): CharSequence {
-        return when (position) {
-            0 -> {
-                "${screenData.userApps.size} USER APPS"
-            }
-            1 -> {
-                "${screenData.systemApps.size} SYSTEM APPS"
-            }
-            else -> {
-                "INVALID"
-            }
-        }
-    }
-}

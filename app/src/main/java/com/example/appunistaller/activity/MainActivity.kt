@@ -3,21 +3,21 @@ package com.example.appunistaller.activity
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Environment
-import android.os.StatFs
 import androidx.appcompat.app.AppCompatActivity
-import com.example.appunistaller.fragment.DemoCollectionPagerAdapter
+import com.example.appunistaller.Utils.MemoryStatus
+import com.example.appunistaller.viewPager.DemoCollectionPagerAdapter
 import com.example.appunistaller.pojo.PackageInfoContainer
 import com.example.appunistaller.fragment.ViewPagerAdapterScreenData
-import com.example.appunistaller.activity.MemoryStatus.bytesToHuman
+import com.example.appunistaller.Utils.MemoryStatus.bytesToHuman
 import com.example.appunistaller.databinding.ActivityMainBinding
 import java.io.File
-import java.text.DecimalFormat
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityMainBinding
+
+    private var homeAdapter: DemoCollectionPagerAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,11 +37,19 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
+    override fun onResume() {
+        super.onResume()
+        setupRv()
+    }
+
     private fun setupRv() {
         try {
             binding.recyclerView.apply {
-                if (adapter == null) {
-                    adapter = DemoCollectionPagerAdapter(supportFragmentManager, getInstalledApps())
+                if (homeAdapter == null) {
+                    homeAdapter = DemoCollectionPagerAdapter(supportFragmentManager, getInstalledApps())
+                    adapter = homeAdapter
+                } else {
+                    (homeAdapter as DemoCollectionPagerAdapter).updateData(getInstalledApps())
                 }
             }
             binding.tabLayout.setupWithViewPager(binding.recyclerView)
@@ -105,72 +113,3 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-object MemoryStatus {
-    private const val ERROR = -1
-    private fun externalMemoryAvailable(): Boolean {
-        return Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
-    }
-
-    val availableInternalMemorySize: Long
-        get() {
-            val path = Environment.getDataDirectory()
-            val stat = StatFs(path.path)
-            val blockSize = stat.blockSizeLong
-            val availableBlocks = stat.availableBlocksLong
-            return availableBlocks * blockSize
-        }
-
-    val totalInternalMemorySize: Long
-        get() {
-            val path = Environment.getDataDirectory()
-            val stat = StatFs(path.path)
-            val blockSize = stat.blockSizeLong
-            val totalBlocks = stat.blockCountLong
-            return totalBlocks * blockSize
-        }
-
-    val availableExternalMemorySize: Long
-        get() = if (externalMemoryAvailable()) {
-            val path = Environment.getExternalStorageDirectory()
-            val stat = StatFs(path.path)
-            val blockSize = stat.blockSizeLong
-            val availableBlocks = stat.availableBlocksLong
-            availableBlocks * blockSize
-        } else {
-            ERROR.toLong()
-        }
-
-    val totalExternalMemorySize: Long
-        get() {
-            return if (externalMemoryAvailable()) {
-                val path = Environment.getExternalStorageDirectory()
-                val stat = StatFs(path.path)
-                val blockSize = stat.blockSizeLong
-                val totalBlocks = stat.blockCountLong
-                totalBlocks * blockSize
-            } else {
-                ERROR.toLong()
-            }
-        }
-
-    private fun floatForm(d: Double): String {
-        return DecimalFormat("#.##").format(d)
-    }
-
-    fun Long.bytesToHuman(): String {
-        val size = this
-        val kb = (1 * 1024).toLong()
-        val mb = kb * 1024
-        val gb = mb * 1024
-        val tb = gb * 1024
-        val pb = tb * 1024
-        val eb = pb * 1024
-        if (size < kb) return floatForm(size.toDouble()) + " byte"
-        if (size in kb until mb) return floatForm(size.toDouble() / kb) + " KB"
-        if (size in mb until gb) return floatForm(size.toDouble() / mb) + " MB"
-        if (size in gb until tb) return floatForm(size.toDouble() / gb) + " GB"
-        if (size in tb until pb) return floatForm(size.toDouble() / tb) + " TB"
-        if (size in pb until eb) return floatForm(size.toDouble() / pb) + " PB"
-        return floatForm(size.toDouble() / eb) + " EB"
-    }
-}
