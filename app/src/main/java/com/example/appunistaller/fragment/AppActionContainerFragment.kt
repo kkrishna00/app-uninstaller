@@ -141,6 +141,7 @@ class AppActionContainerFragment : Fragment(), AppController {
             intent.data = Uri.parse("package:$packageName");
             startActivity(intent);
         } catch (exception: ActivityNotFoundException) {
+            Toast.makeText(activity, "Failed to open app details", Toast.LENGTH_SHORT).show()
             exception.printStackTrace();
             //Open the generic Apps page:
             //  Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
@@ -160,6 +161,7 @@ class AppActionContainerFragment : Fragment(), AppController {
                         )
                     )
                 } catch (exception : NullPointerException) {
+                    Toast.makeText(activity, "CANNOT LAUNCH THIS", Toast.LENGTH_SHORT).show()
                     exception.printStackTrace()
                 }
             } else {
@@ -235,6 +237,8 @@ class AppActionContainerFragment : Fragment(), AppController {
             }
             if (shortcutInfoCompat != null) {
                 ShortcutManagerCompat.requestPinShortcut(context, shortcutInfoCompat, null)
+            } else {
+                Toast.makeText(activity, "CANNOT CREATE SHORTCUT", Toast.LENGTH_SHORT).show()
             }
         } else {
             Toast.makeText(context, "launcher does not support short cut icon", Toast.LENGTH_LONG)
@@ -254,6 +258,7 @@ class AppActionContainerFragment : Fragment(), AppController {
                     )
                 )
             } catch (exception: ActivityNotFoundException) {
+                Toast.makeText(activity, "Failed to launch google Play", Toast.LENGTH_SHORT).show()
                 startActivity(
                     Intent(
                         Intent.ACTION_VIEW,
