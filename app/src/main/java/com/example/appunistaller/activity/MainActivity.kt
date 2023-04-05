@@ -70,6 +70,10 @@ class MainActivity : AppCompatActivity() {
         val userPack = mutableListOf<PackageInfoContainer>()
         val systemPack = mutableListOf<PackageInfoContainer>()
         for (packageInfo in applicationsPack) {
+            if(packageInfo.packageName == this@MainActivity.packageName) {
+                continue
+            }
+
             if (packageInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 1) {
                 try {
                     userPack.add(
