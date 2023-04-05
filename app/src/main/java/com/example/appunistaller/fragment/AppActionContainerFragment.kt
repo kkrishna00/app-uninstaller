@@ -1,4 +1,4 @@
-package com.example.appunistaller
+package com.example.appunistaller.fragment
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
@@ -21,6 +21,10 @@ import androidx.core.graphics.drawable.IconCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.appunistaller.adapter.ActionContainerAdapter
+import com.example.appunistaller.pojo.AppActionsContainer
+import com.example.appunistaller.pojo.AppController
+import com.example.appunistaller.activity.ScreenData
 import com.example.appunistaller.databinding.FragmentAppActionContainerBinding
 import java.text.DateFormat
 import java.util.*

@@ -21,11 +21,11 @@
         android:theme="@style/Theme.AppUnistaller"
         tools:targetApi="31">
         <activity
-            android:name=".AppActionContainerActivity"
+            android:name=".activity.AppActionContainerActivity"
             android:exported="false"
             android:theme="@style/TransParentActivity"/>
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

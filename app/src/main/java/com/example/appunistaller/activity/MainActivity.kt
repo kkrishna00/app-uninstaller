@@ -1,4 +1,4 @@
-package com.example.appunistaller
+package com.example.appunistaller.activity
 
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
@@ -6,7 +6,10 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.StatFs
 import androidx.appcompat.app.AppCompatActivity
-import com.example.appunistaller.MemoryStatus.bytesToHuman
+import com.example.appunistaller.fragment.DemoCollectionPagerAdapter
+import com.example.appunistaller.pojo.PackageInfoContainer
+import com.example.appunistaller.fragment.ViewPagerAdapterScreenData
+import com.example.appunistaller.activity.MemoryStatus.bytesToHuman
 import com.example.appunistaller.databinding.ActivityMainBinding
 import java.io.File
 import java.text.DecimalFormat

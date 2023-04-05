@@ -1,4 +1,4 @@
-package com.example.appunistaller
+package com.example.appunistaller.fragment
 
 import android.content.pm.PackageInfo
 import android.os.Bundle
@@ -11,6 +11,11 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.appunistaller.adapter.CustomAdapter
+import com.example.appunistaller.pojo.MainActivityController
+import com.example.appunistaller.pojo.PackageInfoContainer
+import com.example.appunistaller.activity.AppActionContainerActivity
+import com.example.appunistaller.activity.ScreenData
 import com.example.appunistaller.databinding.FragmentAppContainerBinding
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.parcelize.Parcelize

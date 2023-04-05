@@ -1,11 +1,16 @@
-package com.example.appunistaller
+package com.example.appunistaller.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.appunistaller.*
 import com.example.appunistaller.databinding.AppActionContainerBinding
 import com.example.appunistaller.databinding.AppInfoContainerBinding
+import com.example.appunistaller.pojo.AppActionsContainer
+import com.example.appunistaller.pojo.AppController
+import com.example.appunistaller.pojo.MainActivityController
+import com.example.appunistaller.pojo.PackageInfoContainer
 
 class CustomAdapter(private val dataSet: List<PackageInfoContainer>, private val mainActivityController: MainActivityController) :
     RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
