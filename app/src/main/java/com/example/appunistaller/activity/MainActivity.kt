@@ -82,7 +82,6 @@ class MainActivity : AppCompatActivity() {
                 packageInfoContainer.name?.lowercase()?.contains(query) == true
             }
         )
-        Log.d("KRISHNA", filteredList.toString())
         (homeAdapter as DemoCollectionPagerAdapter).updateData(filteredList)
     }
 
