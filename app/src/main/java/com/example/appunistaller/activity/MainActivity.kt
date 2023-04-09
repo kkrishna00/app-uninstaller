@@ -3,8 +3,8 @@ package com.example.appunistaller.activity
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
@@ -36,6 +36,11 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         setupMemoryStatus()
         setupSearch()
+        setupStatusBar()
+    }
+
+    private fun setupStatusBar() {
+       window?.statusBarColor = Color.parseColor("#FF018786")
     }
 
     private fun setupSearch() {

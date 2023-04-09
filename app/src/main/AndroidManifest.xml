@@ -17,7 +17,9 @@
         android:theme="@style/Theme.AppUnistaller"
         tools:targetApi="31">
         <activity
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
             android:name=".splash.SplashActivity"
+            android:noHistory="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,7 +33,6 @@
             android:theme="@style/TransParentActivity" />
         <activity
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:noHistory="true"
             android:name=".activity.MainActivity"
             android:exported="true">
         </activity>
