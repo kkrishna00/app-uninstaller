@@ -1,4 +1,4 @@
-package com.example.appunistaller.pojo
+package com.stringsAttached.appunistaller.fragment.pojo
 
 import android.content.pm.PackageInfo
 import android.os.Parcelable

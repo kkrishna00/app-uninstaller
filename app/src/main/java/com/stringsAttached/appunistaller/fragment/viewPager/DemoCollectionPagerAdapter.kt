@@ -1,11 +1,11 @@
-package com.example.appunistaller.viewPager
+package com.stringsAttached.appunistaller.fragment.viewPager
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import com.example.appunistaller.fragment.FragmentScreenData
-import com.example.appunistaller.fragment.AppContainerFragment
-import com.example.appunistaller.fragment.ViewPagerAdapterScreenData
+import com.stringsAttached.appunistaller.fragment.fragment.FragmentScreenData
+import com.stringsAttached.appunistaller.fragment.fragment.AppContainerFragment
+import com.stringsAttached.appunistaller.fragment.fragment.ViewPagerAdapterScreenData
 
 class DemoCollectionPagerAdapter(
     fm: FragmentManager,

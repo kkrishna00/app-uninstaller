@@ -1,4 +1,4 @@
-package com.example.appunistaller.adapter
+package com.stringsAttached.appunistaller.fragment.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.appunistaller.*
 import com.example.appunistaller.databinding.AppActionContainerBinding
 import com.example.appunistaller.databinding.AppInfoContainerBinding
-import com.example.appunistaller.pojo.AppActionsContainer
-import com.example.appunistaller.pojo.AppController
-import com.example.appunistaller.pojo.MainActivityController
-import com.example.appunistaller.pojo.PackageInfoContainer
+import com.stringsAttached.appunistaller.fragment.pojo.AppActionsContainer
+import com.stringsAttached.appunistaller.fragment.pojo.AppController
+import com.stringsAttached.appunistaller.fragment.pojo.MainActivityController
+import com.stringsAttached.appunistaller.fragment.pojo.PackageInfoContainer
 
 class CustomAdapter(private val dataSet: List<PackageInfoContainer>, private val mainActivityController: MainActivityController) :
     RecyclerView.Adapter<CustomAdapter.ViewHolder>() {

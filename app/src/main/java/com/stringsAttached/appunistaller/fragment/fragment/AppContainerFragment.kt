@@ -1,4 +1,4 @@
-package com.example.appunistaller.fragment
+package com.stringsAttached.appunistaller.fragment.fragment
 
 import android.content.pm.PackageInfo
 import android.os.Bundle
@@ -9,12 +9,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.appunistaller.activity.AppActionContainerActivity
-import com.example.appunistaller.activity.ScreenData
-import com.example.appunistaller.adapter.CustomAdapter
+import com.stringsAttached.appunistaller.fragment.activity.AppActionContainerActivity
+import com.stringsAttached.appunistaller.fragment.activity.ScreenData
+import com.stringsAttached.appunistaller.fragment.adapter.CustomAdapter
 import com.example.appunistaller.databinding.FragmentAppContainerBinding
-import com.example.appunistaller.pojo.MainActivityController
-import com.example.appunistaller.pojo.PackageInfoContainer
+import com.stringsAttached.appunistaller.fragment.pojo.MainActivityController
+import com.stringsAttached.appunistaller.fragment.pojo.PackageInfoContainer
 import kotlinx.parcelize.Parcelize
 
 private const val SCREEN_DATA = "SCREEN_DATA"

@@ -1,4 +1,4 @@
-package com.example.appunistaller.activity
+package com.stringsAttached.appunistaller.fragment.activity
 
 import android.content.Context
 import android.content.Intent
@@ -6,7 +6,7 @@ import android.content.pm.PackageInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcelable
-import com.example.appunistaller.fragment.AppActionContainerFragment
+import com.stringsAttached.appunistaller.fragment.fragment.AppActionContainerFragment
 import com.example.appunistaller.databinding.ActivityAppActionContainerLayoutBinding
 import kotlinx.parcelize.Parcelize
 

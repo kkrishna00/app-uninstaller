@@ -1,4 +1,4 @@
-package com.example.appunistaller.splash
+package com.stringsAttached.appunistaller.fragment.splash
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
 import com.example.appunistaller.R
-import com.example.appunistaller.activity.MainActivity
+import com.stringsAttached.appunistaller.fragment.activity.MainActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
