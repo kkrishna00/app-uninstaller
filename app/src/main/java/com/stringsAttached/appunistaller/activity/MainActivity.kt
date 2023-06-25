@@ -1,4 +1,4 @@
-package com.stringsAttached.appunistaller.fragment.activity
+package com.stringsAttached.appunistaller.activity
 
 import android.content.Context
 import android.content.pm.ApplicationInfo
@@ -10,12 +10,12 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.stringsAttached.appunistaller.fragment.Utils.MemoryStatus
-import com.stringsAttached.appunistaller.fragment.Utils.MemoryStatus.bytesToHuman
-import com.example.appunistaller.databinding.ActivityMainBinding
-import com.stringsAttached.appunistaller.fragment.fragment.ViewPagerAdapterScreenData
-import com.stringsAttached.appunistaller.fragment.pojo.PackageInfoContainer
-import com.stringsAttached.appunistaller.fragment.viewPager.DemoCollectionPagerAdapter
+import com.stringsAttached.appunistaller.Utils.MemoryStatus
+import com.stringsAttached.appunistaller.Utils.MemoryStatus.bytesToHuman
+import com.stringsAttached.appunistaller.databinding.ActivityMainBinding
+import com.stringsAttached.appunistaller.fragment.ViewPagerAdapterScreenData
+import com.stringsAttached.appunistaller.pojo.PackageInfoContainer
+import com.stringsAttached.appunistaller.viewPager.DemoCollectionPagerAdapter
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

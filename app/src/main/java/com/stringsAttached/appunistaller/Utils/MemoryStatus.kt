@@ -1,4 +1,4 @@
-package com.stringsAttached.appunistaller.fragment.Utils
+package com.stringsAttached.appunistaller.Utils
 
 import android.os.Environment
 import android.os.StatFs
