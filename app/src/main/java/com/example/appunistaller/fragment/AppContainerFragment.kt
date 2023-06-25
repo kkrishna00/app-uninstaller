@@ -9,13 +9,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.appunistaller.adapter.CustomAdapter
-import com.example.appunistaller.pojo.MainActivityController
-import com.example.appunistaller.pojo.PackageInfoContainer
 import com.example.appunistaller.activity.AppActionContainerActivity
 import com.example.appunistaller.activity.ScreenData
+import com.example.appunistaller.adapter.CustomAdapter
 import com.example.appunistaller.databinding.FragmentAppContainerBinding
-import com.google.android.material.snackbar.Snackbar
+import com.example.appunistaller.pojo.MainActivityController
+import com.example.appunistaller.pojo.PackageInfoContainer
 import kotlinx.parcelize.Parcelize
 
 private const val SCREEN_DATA = "SCREEN_DATA"
@@ -57,14 +56,6 @@ class AppContainerFragment : Fragment(), MainActivityController {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initRv()
-        showSnackBar()
-    }
-
-    private fun showSnackBar() {
-        if(screenData?.userApp == false) {
-            Snackbar.make(binding.root, "CANNOT UNINSTALL SYSTEM APPS", Snackbar.LENGTH_SHORT)
-                .show()
-        }
     }
 
     private fun initRv() {

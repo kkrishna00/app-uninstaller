@@ -16,6 +16,7 @@ import com.example.appunistaller.databinding.ActivityMainBinding
 import com.example.appunistaller.fragment.ViewPagerAdapterScreenData
 import com.example.appunistaller.pojo.PackageInfoContainer
 import com.example.appunistaller.viewPager.DemoCollectionPagerAdapter
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
@@ -32,11 +33,17 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupRv()
+        showInfo()
         supportActionBar?.hide()
         setSupportActionBar(binding.toolbar)
         setupMemoryStatus()
         setupSearch()
         setupStatusBar()
+    }
+
+    private fun showInfo() {
+        Snackbar.make(binding.root, "CANNOT UNINSTALL SYSTEM APPS", Snackbar.LENGTH_SHORT)
+            .show()
     }
 
     private fun setupStatusBar() {
@@ -65,6 +72,7 @@ class MainActivity : AppCompatActivity() {
                         filterList(newText.lowercase())
                     } else if(newText.isEmpty()) {
                         setupRv()
+                        hideSoftKeyboard(binding.searchIcon)
                     }
                 }
                 return false
