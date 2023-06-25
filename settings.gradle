@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "App Unistaller"
+rootProject.name = "App Uninstaller"
 include ':app'
