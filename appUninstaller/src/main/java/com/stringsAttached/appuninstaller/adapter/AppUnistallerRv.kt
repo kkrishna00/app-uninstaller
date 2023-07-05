@@ -41,7 +41,7 @@ class CustomAdapter(private val dataSet: List<PackageInfoContainer>, private val
         dataSet[position].packageInfo.applicationInfo.loadIcon(pm)
             ?.let { viewHolder.binding.ImageView.setImageDrawable(it) }
 
-        viewHolder.binding.radioButtonApp.setOnClickListener {
+        viewHolder.binding.root.setOnClickListener {
             val isSelected = viewHolder.binding.radioButtonApp.isSelected
 
             viewHolder.binding.radioButtonApp.isSelected = !isSelected
