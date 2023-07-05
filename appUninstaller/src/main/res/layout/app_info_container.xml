@@ -32,12 +32,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:layout_marginEnd="2dp"
+        android:layout_marginEnd="8dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@color/white"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/actionButton"
         app:layout_constraintStart_toEndOf="@id/ImageView"
         app:layout_constraintTop_toTopOf="@id/ImageView" />
 
@@ -47,12 +47,26 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="4dp"
-        android:layout_marginEnd="2dp"
+        android:layout_marginEnd="8dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@color/white"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/actionButton"
         app:layout_constraintStart_toEndOf="@id/ImageView"
         app:layout_constraintTop_toBottomOf="@id/appName" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/actionButton"
+        android:layout_width="70dp"
+        android:layout_height="32dp"
+        android:background="@drawable/rounded_corner"
+        android:backgroundTint="#2C98F0"
+        android:gravity="center"
+        android:text="@string/launch"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@id/ImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ImageView" />
 </androidx.constraintlayout.widget.ConstraintLayout>
