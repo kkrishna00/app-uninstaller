@@ -35,11 +35,18 @@ class CustomAdapter(private val dataSet: List<PackageInfoContainer>, private val
             append(" \u2022 ")
             append(dataSet[position].appVersion)
         }
-        viewHolder.binding.actionButton.setOnClickListener {
+        viewHolder.binding.root.setOnClickListener {
             mainActivityController.handleActionButton(dataSet[position].packageInfo)
         }
         dataSet[position].packageInfo.applicationInfo.loadIcon(pm)
             ?.let { viewHolder.binding.ImageView.setImageDrawable(it) }
+
+        viewHolder.binding.radioButtonApp.setOnClickListener {
+            val isSelected = viewHolder.binding.radioButtonApp.isSelected
+
+            viewHolder.binding.radioButtonApp.isSelected = !isSelected
+            viewHolder.binding.radioButtonApp.isChecked = !isSelected
+        }
     }
 
     override fun getItemCount() = dataSet.size

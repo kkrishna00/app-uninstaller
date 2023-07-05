@@ -57,6 +57,22 @@
             android:layout_height="wrap_content" />
     </androidx.viewpager.widget.ViewPager>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:contentDescription="@string/delete"
+        android:scaleType="center"
+        android:src="@drawable/baseline_delete_24"
+        app:backgroundTint="@color/white"
+        app:borderWidth="0dp"
+        app:fabSize="normal"
+        app:layout_anchorGravity="bottom|right|end"
+        app:layout_constraintBottom_toTopOf="@id/memoryStatus"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:paddingEnd="13dp"
+        app:paddingStart="28dp" />
+
     <TextView
         android:id="@+id/memoryStatus"
         android:layout_width="match_parent"
