@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "App Uninstaller"
-include ':app'
+include ':appUninstaller'
