@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">App Unistaller</string>
+    <string name="app_name">App Uninstaller</string>
     <string name="installed_apps">INSTALLED APPS</string>
     <string name="launch">ACTION</string>
     <string name="uninstall">UNINSTALL</string>
