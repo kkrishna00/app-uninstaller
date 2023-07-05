@@ -9,12 +9,11 @@
 
     <androidx.appcompat.widget.AppCompatRadioButton
         android:id="@+id/radioButtonApp"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:button="@android:color/transparent"
-        android:checked="true"
-        android:visibility="visible"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:background="@drawable/radio_button_background"
+        android:button="@android:color/transparent"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@id/ImageView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/ImageView" />
