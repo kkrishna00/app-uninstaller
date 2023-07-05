@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace 'com.stringsAttached.appunistaller'
+    namespace 'com.stringsAttached.appuninstaller'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.stringsAttached.appunistaller"
+        applicationId "com.stringsAttached.appuninstaller"
         minSdk 23
         targetSdk 33
         versionCode 1
