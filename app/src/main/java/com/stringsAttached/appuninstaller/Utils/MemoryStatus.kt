@@ -1,4 +1,4 @@
-package com.stringsAttached.appunistaller.Utils
+package com.stringsAttached.appuninstaller.Utils
 
 import android.os.Environment
 import android.os.StatFs
