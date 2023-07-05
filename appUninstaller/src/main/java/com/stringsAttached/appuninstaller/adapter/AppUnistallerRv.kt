@@ -35,7 +35,7 @@ class CustomAdapter(private val dataSet: List<PackageInfoContainer>, private val
             append(" \u2022 ")
             append(dataSet[position].appVersion)
         }
-        viewHolder.binding.root.setOnClickListener {
+        viewHolder.binding.actionButton.setOnClickListener {
             mainActivityController.handleActionButton(dataSet[position].packageInfo)
         }
         dataSet[position].packageInfo.applicationInfo.loadIcon(pm)
