@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:background="@color/black"
     android:layout_height="match_parent"
-    tools:context="com.stringsAttached.appuninstaller.activity.MainActivity">
+    tools:context="com.stringsAttached.appunistaller.activity.MainActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

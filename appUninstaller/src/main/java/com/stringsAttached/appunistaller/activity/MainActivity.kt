@@ -1,4 +1,4 @@
-package com.stringsAttached.appuninstaller.activity
+package com.stringsAttached.appunistaller.activity
 
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -15,14 +15,14 @@ import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.stringsAttached.appuninstaller.Utils.MemoryStatus
-import com.stringsAttached.appuninstaller.Utils.MemoryStatus.bytesToHuman
-import com.stringsAttached.appuninstaller.databinding.ActivityMainBinding
-import com.stringsAttached.appuninstaller.fragment.ViewPagerAdapterScreenData
-import com.stringsAttached.appuninstaller.pojo.PackageInfoContainer
-import com.stringsAttached.appuninstaller.viewPager.DemoCollectionPagerAdapter
+import com.stringsAttached.appunistaller.Utils.MemoryStatus
+import com.stringsAttached.appunistaller.Utils.MemoryStatus.bytesToHuman
+import com.stringsAttached.appunistaller.databinding.ActivityMainBinding
+import com.stringsAttached.appunistaller.fragment.ViewPagerAdapterScreenData
+import com.stringsAttached.appunistaller.pojo.PackageInfoContainer
+import com.stringsAttached.appunistaller.viewPager.DemoCollectionPagerAdapter
 import com.google.android.material.snackbar.Snackbar
-import com.stringsAttached.appuninstaller.pojo.AppActivityController
+import com.stringsAttached.appunistaller.pojo.AppActivityController
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File

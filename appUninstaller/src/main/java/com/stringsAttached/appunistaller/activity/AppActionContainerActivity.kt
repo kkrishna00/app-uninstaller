@@ -1,4 +1,4 @@
-package com.stringsAttached.appuninstaller.activity
+package com.stringsAttached.appunistaller.activity
 
 import android.content.Context
 import android.content.Intent
@@ -6,8 +6,8 @@ import android.content.pm.PackageInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcelable
-import com.stringsAttached.appuninstaller.databinding.ActivityAppActionContainerLayoutBinding
-import com.stringsAttached.appuninstaller.fragment.AppActionContainerFragment
+import com.stringsAttached.appunistaller.databinding.ActivityAppActionContainerLayoutBinding
+import com.stringsAttached.appunistaller.fragment.AppActionContainerFragment
 import kotlinx.parcelize.Parcelize
 
 class AppActionContainerActivity : AppCompatActivity() {

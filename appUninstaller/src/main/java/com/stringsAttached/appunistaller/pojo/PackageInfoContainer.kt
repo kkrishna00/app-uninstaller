@@ -1,4 +1,4 @@
-package com.stringsAttached.appuninstaller.pojo
+package com.stringsAttached.appunistaller.pojo
 
 import android.content.pm.PackageInfo
 import android.os.Parcelable

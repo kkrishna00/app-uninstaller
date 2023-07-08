@@ -1,16 +1,16 @@
-package com.stringsAttached.appuninstaller.adapter
+package com.stringsAttached.appunistaller.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.stringsAttached.appuninstaller.*
-import com.stringsAttached.appuninstaller.databinding.AppActionContainerBinding
-import com.stringsAttached.appuninstaller.databinding.AppInfoContainerBinding
-import com.stringsAttached.appuninstaller.pojo.AppActionsContainer
-import com.stringsAttached.appuninstaller.pojo.AppController
-import com.stringsAttached.appuninstaller.pojo.AppActivityController
-import com.stringsAttached.appuninstaller.pojo.PackageInfoContainer
+import com.stringsAttached.appunistaller.*
+import com.stringsAttached.appunistaller.databinding.AppActionContainerBinding
+import com.stringsAttached.appunistaller.databinding.AppInfoContainerBinding
+import com.stringsAttached.appunistaller.pojo.AppActionsContainer
+import com.stringsAttached.appunistaller.pojo.AppController
+import com.stringsAttached.appunistaller.pojo.AppActivityController
+import com.stringsAttached.appunistaller.pojo.PackageInfoContainer
 
 class CustomAdapter(
     private val dataSet: List<PackageInfoContainer>,

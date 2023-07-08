@@ -1,4 +1,4 @@
-package com.stringsAttached.appuninstaller.splash
+package com.stringsAttached.appunistaller.splash
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -6,8 +6,8 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
-import com.stringsAttached.appuninstaller.R
-import com.stringsAttached.appuninstaller.activity.MainActivity
+import com.stringsAttached.appunistaller.R
+import com.stringsAttached.appunistaller.activity.MainActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

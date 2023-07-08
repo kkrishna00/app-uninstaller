@@ -1,4 +1,4 @@
-package com.stringsAttached.appuninstaller
+package com.stringsAttached.appunistaller
 
 import org.junit.Test
 

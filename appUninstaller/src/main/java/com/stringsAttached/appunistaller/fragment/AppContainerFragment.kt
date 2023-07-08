@@ -1,4 +1,4 @@
-package com.stringsAttached.appuninstaller.fragment
+package com.stringsAttached.appunistaller.fragment
 
 import android.content.Context
 import android.content.pm.PackageInfo
@@ -10,13 +10,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.stringsAttached.appuninstaller.activity.AppActionContainerActivity
-import com.stringsAttached.appuninstaller.activity.MainActivity
-import com.stringsAttached.appuninstaller.activity.ScreenData
-import com.stringsAttached.appuninstaller.adapter.CustomAdapter
-import com.stringsAttached.appuninstaller.databinding.FragmentAppContainerBinding
-import com.stringsAttached.appuninstaller.pojo.AppActivityController
-import com.stringsAttached.appuninstaller.pojo.PackageInfoContainer
+import com.stringsAttached.appunistaller.activity.AppActionContainerActivity
+import com.stringsAttached.appunistaller.activity.MainActivity
+import com.stringsAttached.appunistaller.activity.ScreenData
+import com.stringsAttached.appunistaller.adapter.CustomAdapter
+import com.stringsAttached.appunistaller.databinding.FragmentAppContainerBinding
+import com.stringsAttached.appunistaller.pojo.AppActivityController
+import com.stringsAttached.appunistaller.pojo.PackageInfoContainer
 import kotlinx.parcelize.Parcelize
 
 private const val SCREEN_DATA = "SCREEN_DATA"
