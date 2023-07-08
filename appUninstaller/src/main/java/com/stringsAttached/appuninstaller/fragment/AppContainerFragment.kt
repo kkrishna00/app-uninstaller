@@ -77,7 +77,8 @@ class AppContainerFragment : Fragment(), AppActivityController {
                         CustomAdapter(
                             dataSet = it,
                             appActivityController = this@AppContainerFragment,
-                            userApp = screenData?.userApp ?: false
+                            userApp = screenData?.userApp ?: false,
+                            showActionButton = screenData?.showActionButton ?: false
                         )
                     }
                 layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
@@ -92,21 +93,23 @@ class AppContainerFragment : Fragment(), AppActivityController {
         )
     }
 
-    override fun handleCheckBoxClicked() {
-        appActivityController.handleCheckBoxClicked()
+    override fun handleCheckBoxClicked(isSelected: Boolean, packageInfo: PackageInfoContainer) {
+        appActivityController.handleCheckBoxClicked(isSelected, packageInfo)
     }
 }
 
 @Parcelize
 data class ViewPagerAdapterScreenData(
     val userApps: List<PackageInfoContainer>,
-    val systemApps: List<PackageInfoContainer>
+    val systemApps: List<PackageInfoContainer>,
+    val showActionButton: Boolean = true
 ) : java.io.Serializable, Parcelable
 
 @Parcelize
 data class FragmentScreenData(
     val installedApps: List<PackageInfoContainer>,
-    val userApp: Boolean
+    val userApp: Boolean,
+    val showActionButton: Boolean
 ) : java.io.Serializable, Parcelable
 
 

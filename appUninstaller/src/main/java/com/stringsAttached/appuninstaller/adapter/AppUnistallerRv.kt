@@ -50,11 +50,13 @@ class CustomAdapter(
             ?.let { viewHolder.binding.ImageView.setImageDrawable(it) }
 
         if (userApp) {
+            viewHolder.binding.radioButtonApp.isSelected = dataSet[position].isSelected
+            viewHolder.binding.radioButtonApp.isChecked = dataSet[position].isSelected
             viewHolder.binding.root.setOnClickListener {
                 val isSelected = viewHolder.binding.radioButtonApp.isSelected
-
                 viewHolder.binding.radioButtonApp.isSelected = !isSelected
                 viewHolder.binding.radioButtonApp.isChecked = !isSelected
+                appActivityController.handleCheckBoxClicked(viewHolder.binding.radioButtonApp.isChecked, dataSet[position])
             }
         } else {
             viewHolder.binding.radioButtonApp.visibility = View.GONE

@@ -1,14 +1,18 @@
 package com.stringsAttached.appuninstaller.activity
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.stringsAttached.appuninstaller.Utils.MemoryStatus
@@ -26,9 +30,11 @@ import java.io.File
 
 class MainActivity : AppCompatActivity(), AppActivityController {
 
-    private lateinit var binding : ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
 
     private var homeAdapter: DemoCollectionPagerAdapter? = null
+
+    private var listMap = mutableMapOf<String, PackageInfoContainer>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +47,16 @@ class MainActivity : AppCompatActivity(), AppActivityController {
         setupMemoryStatus()
         setupSearch()
         setupStatusBar()
+        setupFabButtonListener()
+    }
+
+    private fun setupFabButtonListener() {
+        binding.fabDeleteButton.visibility = View.GONE
+        binding.fabDeleteButton.setOnClickListener {
+            listMap.forEach { app ->
+                uninstallApp(app.toPair().second.packageInfo)
+            }
+        }
     }
 
     private fun showInfo() {
@@ -49,7 +65,7 @@ class MainActivity : AppCompatActivity(), AppActivityController {
     }
 
     private fun setupStatusBar() {
-       window?.statusBarColor = Color.parseColor("#FF018786")
+        window?.statusBarColor = Color.parseColor("#FF018786")
     }
 
     private fun setupSearch() {
@@ -72,7 +88,7 @@ class MainActivity : AppCompatActivity(), AppActivityController {
                     delay(300L)
                     if (newText.length >= 3) {
                         filterList(newText.lowercase())
-                    } else if(newText.isEmpty()) {
+                    } else if (newText.isEmpty()) {
                         setupRv()
                         hideSoftKeyboard(binding.searchIcon)
                     }
@@ -119,7 +135,8 @@ class MainActivity : AppCompatActivity(), AppActivityController {
         try {
             binding.recyclerView.apply {
                 if (homeAdapter == null) {
-                    homeAdapter = DemoCollectionPagerAdapter(supportFragmentManager, getInstalledApps())
+                    homeAdapter =
+                        DemoCollectionPagerAdapter(supportFragmentManager, getInstalledApps())
                     adapter = homeAdapter
                 } else {
                     (homeAdapter as DemoCollectionPagerAdapter).updateData(getInstalledApps())
@@ -135,7 +152,11 @@ class MainActivity : AppCompatActivity(), AppActivityController {
 
         val applicationsPack =
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                packageManager.getInstalledPackages(PackageManager.PackageInfoFlags.of(PackageManager.GET_META_DATA.toLong()))
+                packageManager.getInstalledPackages(
+                    PackageManager.PackageInfoFlags.of(
+                        PackageManager.GET_META_DATA.toLong()
+                    )
+                )
             } else {
                 packageManager.getInstalledPackages(PackageManager.GET_META_DATA)
             }
@@ -143,7 +164,7 @@ class MainActivity : AppCompatActivity(), AppActivityController {
         val userPack = mutableListOf<PackageInfoContainer>()
         val systemPack = mutableListOf<PackageInfoContainer>()
         for (packageInfo in applicationsPack) {
-            if(packageInfo.packageName == this@MainActivity.packageName) {
+            if (packageInfo.packageName == this@MainActivity.packageName) {
                 continue
             }
 
@@ -155,7 +176,8 @@ class MainActivity : AppCompatActivity(), AppActivityController {
                             packageInfo = packageInfo,
                             appVersion = packageInfo.versionName,
                             packageSize = File(packageInfo.applicationInfo.sourceDir).length()
-                                .bytesToHuman()
+                                .bytesToHuman(),
+                            isSelected = listMap.contains(packageInfo.packageName)
                         )
                     )
                 } catch (exception: java.lang.Exception) {
@@ -189,8 +211,49 @@ class MainActivity : AppCompatActivity(), AppActivityController {
         )
     }
 
-    override fun handleCheckBoxClicked() {
+    override fun handleCheckBoxClicked(isSelected: Boolean, packageInfo: PackageInfoContainer) {
+        if (isSelected) {
+            listMap[packageInfo.packageInfo.packageName] = packageInfo
+            if (listMap.size == 1) {
+                binding.fabDeleteButton.visibility = View.VISIBLE
+                homeAdapter?.updateData(
+                    screenData = getInstalledApps().copy(showActionButton = false)
+                )
+            }
+            binding.title.text = buildString {
+                append(listMap.size)
+                append(" SELECTED APPS")
+            }
+        } else {
+            listMap.remove(packageInfo.packageInfo.packageName)
+            if (listMap.isEmpty()) {
+                binding.fabDeleteButton.visibility = View.GONE
+                homeAdapter?.updateData(
+                    screenData = getInstalledApps().copy(showActionButton = true)
+                )
+                binding.title.text = buildString {
+                    append(getInstalledApps().systemApps.size + getInstalledApps().userApps.size)
+                    append(" INSTALLED APPS")
+                }
+            } else {
+                binding.title.text = buildString {
+                    append(listMap.size)
+                    append(" SELECTED APPS")
+                }
+            }
+        }
+    }
 
+    private fun uninstallApp(packageInfo: PackageInfo) {
+        val packageName = packageInfo.packageName
+        try {
+            val intent = Intent(Intent.ACTION_DELETE)
+            intent.data = Uri.parse("package:$packageName")
+            startActivity(intent)
+        } catch (exception: ActivityNotFoundException) {
+            exception.printStackTrace()
+            Toast.makeText(this, "NO APP FOUND", Toast.LENGTH_SHORT).show()
+        }
     }
 }
 

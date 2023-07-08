@@ -20,7 +20,8 @@ class DemoCollectionPagerAdapter(
                 AppContainerFragment.newInstance(
                     screenData = FragmentScreenData(
                         installedApps = screenData.userApps,
-                        userApp = true
+                        userApp = true,
+                        showActionButton = screenData.showActionButton
                     )
                 )
             }
@@ -28,7 +29,8 @@ class DemoCollectionPagerAdapter(
                 AppContainerFragment.newInstance(
                     screenData = FragmentScreenData(
                         installedApps = screenData.systemApps,
-                        userApp = false
+                        userApp = false,
+                        showActionButton = screenData.showActionButton
                     )
                 )
             }
@@ -36,7 +38,8 @@ class DemoCollectionPagerAdapter(
                 AppContainerFragment.newInstance(
                     screenData = FragmentScreenData(
                         installedApps = screenData.userApps,
-                        userApp = true
+                        userApp = true,
+                        showActionButton = screenData.showActionButton
                     )
                 )
             }
