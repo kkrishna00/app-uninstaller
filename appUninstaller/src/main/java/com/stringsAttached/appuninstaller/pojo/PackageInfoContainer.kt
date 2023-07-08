@@ -12,8 +12,11 @@ data class PackageInfoContainer(
     val packageSize: String
 ) : Parcelable, java.io.Serializable
 
-interface MainActivityController {
-    fun handleActionButton(packageInfo: PackageInfo)
+interface AppActivityController {
+    fun handleActionButton(packageInfo: PackageInfo) {
+
+    }
+    fun handleCheckBoxClicked()
 }
 
 @Parcelize

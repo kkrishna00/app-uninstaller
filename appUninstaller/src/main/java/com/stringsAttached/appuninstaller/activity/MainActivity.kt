@@ -2,6 +2,7 @@ package com.stringsAttached.appuninstaller.activity
 
 import android.content.Context
 import android.content.pm.ApplicationInfo
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
@@ -17,12 +18,13 @@ import com.stringsAttached.appuninstaller.fragment.ViewPagerAdapterScreenData
 import com.stringsAttached.appuninstaller.pojo.PackageInfoContainer
 import com.stringsAttached.appuninstaller.viewPager.DemoCollectionPagerAdapter
 import com.google.android.material.snackbar.Snackbar
+import com.stringsAttached.appuninstaller.pojo.AppActivityController
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), AppActivityController {
 
     private lateinit var binding : ActivityMainBinding
 
@@ -185,6 +187,10 @@ class MainActivity : AppCompatActivity() {
             systemApps = systemPack,
             userApps = userPack
         )
+    }
+
+    override fun handleCheckBoxClicked() {
+
     }
 }
 
