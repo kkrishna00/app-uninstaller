@@ -1,5 +1,6 @@
 package com.stringsAttached.appuninstaller.fragment
 
+import android.content.Context
 import android.content.pm.PackageInfo
 import android.os.Bundle
 import android.os.Parcelable
@@ -10,16 +11,17 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.stringsAttached.appuninstaller.activity.AppActionContainerActivity
+import com.stringsAttached.appuninstaller.activity.MainActivity
 import com.stringsAttached.appuninstaller.activity.ScreenData
 import com.stringsAttached.appuninstaller.adapter.CustomAdapter
 import com.stringsAttached.appuninstaller.databinding.FragmentAppContainerBinding
-import com.stringsAttached.appuninstaller.pojo.MainActivityController
+import com.stringsAttached.appuninstaller.pojo.AppActivityController
 import com.stringsAttached.appuninstaller.pojo.PackageInfoContainer
 import kotlinx.parcelize.Parcelize
 
 private const val SCREEN_DATA = "SCREEN_DATA"
 
-class AppContainerFragment : Fragment(), MainActivityController {
+class AppContainerFragment : Fragment(), AppActivityController {
 
     companion object {
         @JvmStatic
@@ -32,12 +34,21 @@ class AppContainerFragment : Fragment(), MainActivityController {
             }
     }
 
+    private lateinit var appActivityController: AppActivityController
+
     private var screenData: FragmentScreenData? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             screenData = it.getParcelable(SCREEN_DATA)
+        }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is MainActivity) {
+            this.appActivityController = context
         }
     }
 
@@ -62,7 +73,13 @@ class AppContainerFragment : Fragment(), MainActivityController {
         binding.appContainerRv.apply {
             if (adapter == null) {
                 adapter =
-                    screenData?.installedApps?.let { CustomAdapter(it, this@AppContainerFragment) }
+                    screenData?.installedApps?.let {
+                        CustomAdapter(
+                            dataSet = it,
+                            appActivityController = this@AppContainerFragment,
+                            userApp = screenData?.userApp ?: false
+                        )
+                    }
                 layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             }
         }
@@ -73,6 +90,10 @@ class AppContainerFragment : Fragment(), MainActivityController {
             requireContext(),
             screenData = ScreenData(packageInfo, screenData?.userApp ?: false)
         )
+    }
+
+    override fun handleCheckBoxClicked() {
+        appActivityController.handleCheckBoxClicked()
     }
 }
 

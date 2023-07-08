@@ -9,11 +9,15 @@ import com.stringsAttached.appuninstaller.databinding.AppActionContainerBinding
 import com.stringsAttached.appuninstaller.databinding.AppInfoContainerBinding
 import com.stringsAttached.appuninstaller.pojo.AppActionsContainer
 import com.stringsAttached.appuninstaller.pojo.AppController
-import com.stringsAttached.appuninstaller.pojo.MainActivityController
+import com.stringsAttached.appuninstaller.pojo.AppActivityController
 import com.stringsAttached.appuninstaller.pojo.PackageInfoContainer
 
-class CustomAdapter(private val dataSet: List<PackageInfoContainer>, private val mainActivityController: MainActivityController) :
-    RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
+class CustomAdapter(
+    private val dataSet: List<PackageInfoContainer>,
+    private val appActivityController: AppActivityController,
+    private val userApp: Boolean,
+    private val showActionButton: Boolean = false
+) : RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val binding = AppInfoContainerBinding.bind(view)
@@ -35,24 +39,35 @@ class CustomAdapter(private val dataSet: List<PackageInfoContainer>, private val
             append(" \u2022 ")
             append(dataSet[position].appVersion)
         }
-        viewHolder.binding.actionButton.setOnClickListener {
-            mainActivityController.handleActionButton(dataSet[position].packageInfo)
+        if (showActionButton) {
+            viewHolder.binding.actionButton.setOnClickListener {
+                appActivityController.handleActionButton(dataSet[position].packageInfo)
+            }
+        } else {
+            viewHolder.binding.actionButton.visibility = View.GONE
         }
         dataSet[position].packageInfo.applicationInfo.loadIcon(pm)
             ?.let { viewHolder.binding.ImageView.setImageDrawable(it) }
 
-        viewHolder.binding.root.setOnClickListener {
-            val isSelected = viewHolder.binding.radioButtonApp.isSelected
+        if (userApp) {
+            viewHolder.binding.root.setOnClickListener {
+                val isSelected = viewHolder.binding.radioButtonApp.isSelected
 
-            viewHolder.binding.radioButtonApp.isSelected = !isSelected
-            viewHolder.binding.radioButtonApp.isChecked = !isSelected
+                viewHolder.binding.radioButtonApp.isSelected = !isSelected
+                viewHolder.binding.radioButtonApp.isChecked = !isSelected
+            }
+        } else {
+            viewHolder.binding.radioButtonApp.visibility = View.GONE
         }
     }
 
     override fun getItemCount() = dataSet.size
 }
 
-class ActionContainerAdapter(private val dataSet: List<AppActionsContainer>, private val appController: AppController) :
+class ActionContainerAdapter(
+    private val dataSet: List<AppActionsContainer>,
+    private val appController: AppController
+) :
     RecyclerView.Adapter<ActionContainerAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -67,22 +82,27 @@ class ActionContainerAdapter(private val dataSet: List<AppActionsContainer>, pri
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        val imageResource = when(dataSet[position].name) {
+        val imageResource = when (dataSet[position].name) {
             AppActionsContainer.ActionType.UNINSTALL -> {
                 R.mipmap.delete_icon
             }
+
             AppActionsContainer.ActionType.DETAILS -> {
                 R.mipmap.info_icon
             }
+
             AppActionsContainer.ActionType.ADD_SHORTCUT -> {
                 R.mipmap.shortcut_icon
             }
+
             AppActionsContainer.ActionType.GO_TO_PLAY_STORE -> {
                 R.mipmap.search_icon
             }
+
             AppActionsContainer.ActionType.LAUNCH -> {
                 R.mipmap.launch_icon
             }
+
             AppActionsContainer.ActionType.UPDATE -> {
                 R.mipmap.update_icon
             }
@@ -92,22 +112,27 @@ class ActionContainerAdapter(private val dataSet: List<AppActionsContainer>, pri
         viewHolder.binding.actionText.text = dataSet[position].getActionType()
 
         viewHolder.binding.root.setOnClickListener {
-            when(dataSet[position].name) {
+            when (dataSet[position].name) {
                 AppActionsContainer.ActionType.UNINSTALL -> {
                     appController.uninstallApp()
                 }
+
                 AppActionsContainer.ActionType.DETAILS -> {
                     appController.getAppDetails()
                 }
+
                 AppActionsContainer.ActionType.ADD_SHORTCUT -> {
                     appController.createShortcutOnHomeScreen()
                 }
+
                 AppActionsContainer.ActionType.GO_TO_PLAY_STORE -> {
                     appController.searchOnGooglePlay()
                 }
+
                 AppActionsContainer.ActionType.LAUNCH -> {
                     appController.launchApp()
                 }
+
                 AppActionsContainer.ActionType.UPDATE -> {
                     appController.searchOnGooglePlay()
                 }
