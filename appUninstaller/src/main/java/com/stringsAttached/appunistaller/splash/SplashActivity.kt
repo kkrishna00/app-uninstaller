@@ -20,7 +20,7 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
         setupStatusBar()
         lifecycleScope.launch {
-            delay(800L)
+            delay(100L)
             startActivity(Intent(this@SplashActivity, MainActivity::class.java))
         }
     }

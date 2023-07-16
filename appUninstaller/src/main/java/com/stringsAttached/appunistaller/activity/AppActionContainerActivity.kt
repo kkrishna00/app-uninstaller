@@ -40,6 +40,11 @@ class AppActionContainerActivity : AppCompatActivity() {
             AppActionContainerFragment.newInstance(screenData)
         ).commit()
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.clear()
+    }
 }
 
 @Parcelize

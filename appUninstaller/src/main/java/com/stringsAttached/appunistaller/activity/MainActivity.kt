@@ -19,6 +19,14 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuItemCompat
 import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.initialization.InitializationStatus
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener
 import com.google.android.material.snackbar.Snackbar
 import com.stringsAttached.appunistaller.R
 import com.stringsAttached.appunistaller.Utils.MemoryStatus
@@ -26,8 +34,8 @@ import com.stringsAttached.appunistaller.Utils.MemoryStatus.bytesToHuman
 import com.stringsAttached.appunistaller.databinding.ActivityMainBinding
 import com.stringsAttached.appunistaller.fragment.ViewPagerAdapterScreenData
 import com.stringsAttached.appunistaller.pojo.AppActivityController
-import com.stringsAttached.appunistaller.pojo.PackageInfoContainer
 import com.stringsAttached.appunistaller.pojo.FilterType
+import com.stringsAttached.appunistaller.pojo.PackageInfoContainer
 import com.stringsAttached.appunistaller.viewPager.DemoCollectionPagerAdapter
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -60,6 +68,44 @@ class MainActivity : AppCompatActivity(), AppActivityController {
         setupMemoryStatus()
         setupStatusBar()
         setupFabButtonListener()
+        setupAd()
+    }
+
+    private fun setupAd() {
+        MobileAds.initialize(this) {
+            // no -op
+        }
+
+        val adRequest = AdRequest.Builder().build()
+        binding.adView.loadAd(adRequest)
+        binding.adView.adListener = object : AdListener() {
+            override fun onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+            }
+
+            override fun onAdClosed() {
+                // Code to be executed when the user is about to return
+                // to the app after tapping on an ad.
+            }
+
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                // Code to be executed when an ad request fails.
+            }
+
+            override fun onAdImpression() {
+                // Code to be executed when an impression is recorded
+                // for an ad.
+            }
+
+            override fun onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+            }
+
+            override fun onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+            }
+        }
     }
 
     private fun setupSortingViews() {
