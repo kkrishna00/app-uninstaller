@@ -21,12 +21,8 @@ import androidx.core.view.MenuItemCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.initialization.InitializationStatus
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener
 import com.google.android.material.snackbar.Snackbar
 import com.stringsAttached.appunistaller.R
 import com.stringsAttached.appunistaller.Utils.MemoryStatus
