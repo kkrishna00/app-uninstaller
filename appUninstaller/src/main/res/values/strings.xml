@@ -11,4 +11,5 @@
     <string name="sort_by_size">Sort by Size</string>
     <string name="sort_by_date">Sort by Date</string>
     <string name="search">Search</string>
+    <string name="app_uninstaller">App Uninstaller</string>
 </resources>

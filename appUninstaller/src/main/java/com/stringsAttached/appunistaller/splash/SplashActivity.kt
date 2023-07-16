@@ -5,7 +5,9 @@ import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
+import com.stringsAttached.appunistaller.BuildConfig
 import com.stringsAttached.appunistaller.R
 import com.stringsAttached.appunistaller.activity.MainActivity
 import kotlinx.coroutines.delay
@@ -24,6 +26,11 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun setupStatusBar() {
+        val view = findViewById<TextView>(R.id.appVersion)
+        view.text = buildString {
+            append("Build number - ")
+            append(BuildConfig.VERSION_NAME)
+        }
         window?.statusBarColor = Color.parseColor("#0096B1")
     }
 }
