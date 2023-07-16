@@ -27,7 +27,7 @@ import com.stringsAttached.appunistaller.databinding.ActivityMainBinding
 import com.stringsAttached.appunistaller.fragment.ViewPagerAdapterScreenData
 import com.stringsAttached.appunistaller.pojo.AppActivityController
 import com.stringsAttached.appunistaller.pojo.PackageInfoContainer
-import com.stringsAttached.appunistaller.pojo.SortingType
+import com.stringsAttached.appunistaller.pojo.FilterType
 import com.stringsAttached.appunistaller.viewPager.DemoCollectionPagerAdapter
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -41,7 +41,9 @@ class MainActivity : AppCompatActivity(), AppActivityController {
 
     private var homeAdapter: DemoCollectionPagerAdapter? = null
 
-    private var currentSortingType: SortingType = SortingType.DEFAULT
+    private var currentSortingType: FilterType = FilterType.DEFAULT
+
+    private var currentQuery: String = ""
 
     private var listMap = mutableMapOf<String, PackageInfoContainer>()
 
@@ -74,22 +76,38 @@ class MainActivity : AppCompatActivity(), AppActivityController {
 
     private fun sortList(screenData: ViewPagerAdapterScreenData): ViewPagerAdapterScreenData {
         return when (currentSortingType) {
-            SortingType.SORT_BY_NAME -> {
+            FilterType.SORT_BY_NAME -> {
                 sortByName(screenData)
             }
 
-            SortingType.SORT_BY_DATE -> {
+            FilterType.SORT_BY_DATE -> {
                 sortByDate(screenData)
             }
 
-            SortingType.SORT_BY_SIZE -> {
+            FilterType.SORT_BY_SIZE -> {
                 sortBySize(screenData)
             }
 
-            SortingType.DEFAULT -> {
-                return screenData
+            FilterType.DEFAULT -> {
+                screenData
+            }
+
+            FilterType.SEARCH -> {
+                filtererSearchList(screenData)
             }
         }
+    }
+
+    private fun filtererSearchList(list: ViewPagerAdapterScreenData): ViewPagerAdapterScreenData {
+        return list.copy(
+            userApps = list.userApps.filter { packageInfoContainer ->
+                packageInfoContainer.name?.lowercase()?.contains(currentQuery) == true
+            },
+            systemApps = list.systemApps.filter { packageInfoContainer ->
+                packageInfoContainer.name?.lowercase()?.contains(currentQuery) == true
+            },
+            showActionButton = listMap.isEmpty()
+        )
     }
 
     private fun sortByName(data: ViewPagerAdapterScreenData): ViewPagerAdapterScreenData {
@@ -128,17 +146,17 @@ class MainActivity : AppCompatActivity(), AppActivityController {
         when (item.itemId) {
             R.id.sortByName -> {
 
-                currentSortingType = SortingType.SORT_BY_NAME
+                currentSortingType = FilterType.SORT_BY_NAME
                 homeAdapter?.updateData(getInstalledApps())
             }
 
             R.id.sortByDate -> {
-                currentSortingType = SortingType.SORT_BY_DATE
+                currentSortingType = FilterType.SORT_BY_DATE
                 homeAdapter?.updateData(getInstalledApps())
             }
 
             R.id.sortBySize -> {
-                currentSortingType = SortingType.SORT_BY_SIZE
+                currentSortingType = FilterType.SORT_BY_SIZE
                 homeAdapter?.updateData(getInstalledApps())
             }
         }
@@ -179,13 +197,19 @@ class MainActivity : AppCompatActivity(), AppActivityController {
     }
 
     private fun setupSearch(searchView: SearchView) {
+        var start = true
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 lifecycleScope.launch {
                     delay(300L)
+                    currentQuery = query
                     if (query.length >= 3) {
+                        start = false
+                        currentSortingType = FilterType.SEARCH
                         filterList(query.lowercase())
-                    } else if (query.isEmpty()) {
+                    } else if (query.isEmpty() && !start) {
+                        start = false
+                        currentSortingType = FilterType.DEFAULT
                         setupRv()
                     }
                 }
@@ -195,10 +219,15 @@ class MainActivity : AppCompatActivity(), AppActivityController {
             override fun onQueryTextChange(newText: String): Boolean {
                 lifecycleScope.launch {
                     delay(300L)
+                    currentQuery = newText
                     if (newText.length >= 3) {
+                        start = false
+                        currentSortingType = FilterType.SEARCH
                         filterList(newText.lowercase())
-                    } else if (newText.isEmpty()) {
+                    } else if (newText.isEmpty() && !start) {
+                        start = false
                         setupRv()
+                        currentSortingType = FilterType.DEFAULT
                         hideSoftKeyboard(searchView)
                     }
                 }

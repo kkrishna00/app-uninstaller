@@ -50,6 +50,6 @@ interface AppController {
 }
 
 @Parcelize
-enum class SortingType : Parcelable {
-    SORT_BY_NAME, SORT_BY_DATE, SORT_BY_SIZE, DEFAULT
+enum class FilterType : Parcelable {
+    SORT_BY_NAME, SORT_BY_DATE, SORT_BY_SIZE, DEFAULT, SEARCH
 }
