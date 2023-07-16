@@ -446,7 +446,11 @@ class MainActivity : AppCompatActivity(), AppActivityController {
         } else {
             listMap.remove(packageInfo.packageInfo.packageName)
             if (listMap.isEmpty()) {
-                currentSortingType = FilterType.DEFAULT
+                currentSortingType = if(currentQuery.isEmpty()) {
+                    FilterType.DEFAULT
+                } else {
+                    FilterType.SEARCH
+                }
                 binding.fabDeleteButton.visibility = View.GONE
                 homeAdapter?.updateData(
                     screenData = getInstalledApps().copy(showActionButton = true)
