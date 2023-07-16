@@ -9,7 +9,6 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -28,11 +27,11 @@ import com.stringsAttached.appunistaller.databinding.ActivityMainBinding
 import com.stringsAttached.appunistaller.fragment.ViewPagerAdapterScreenData
 import com.stringsAttached.appunistaller.pojo.AppActivityController
 import com.stringsAttached.appunistaller.pojo.PackageInfoContainer
+import com.stringsAttached.appunistaller.pojo.SortingType
 import com.stringsAttached.appunistaller.viewPager.DemoCollectionPagerAdapter
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
-import java.text.DateFormat
 import java.util.Date
 
 
@@ -41,6 +40,8 @@ class MainActivity : AppCompatActivity(), AppActivityController {
     private lateinit var binding: ActivityMainBinding
 
     private var homeAdapter: DemoCollectionPagerAdapter? = null
+
+    private var currentSortingType: SortingType = SortingType.DEFAULT
 
     private var listMap = mutableMapOf<String, PackageInfoContainer>()
 
@@ -51,11 +52,16 @@ class MainActivity : AppCompatActivity(), AppActivityController {
         setupRv()
         showInfo()
         supportActionBar?.hide()
+        setupSortingViews()
         setSupportActionBar(binding.toolbar)
         setOverflowIcon()
         setupMemoryStatus()
         setupStatusBar()
         setupFabButtonListener()
+    }
+
+    private fun setupSortingViews() {
+        binding.sortingViewContainer.visibility = View.GONE
     }
 
     private fun setOverflowIcon() {
@@ -66,43 +72,74 @@ class MainActivity : AppCompatActivity(), AppActivityController {
         binding.toolbar.overflowIcon = drawable
     }
 
+    private fun sortList(screenData: ViewPagerAdapterScreenData): ViewPagerAdapterScreenData {
+        return when (currentSortingType) {
+            SortingType.SORT_BY_NAME -> {
+                sortByName(screenData)
+            }
+
+            SortingType.SORT_BY_DATE -> {
+                sortByDate(screenData)
+            }
+
+            SortingType.SORT_BY_SIZE -> {
+                sortBySize(screenData)
+            }
+
+            SortingType.DEFAULT -> {
+                return screenData
+            }
+        }
+    }
+
+    private fun sortByName(data: ViewPagerAdapterScreenData): ViewPagerAdapterScreenData {
+        return data.copy(
+            userApps = data.userApps.sortedBy { it.name },
+            systemApps = data.systemApps.sortedBy { it.name },
+            showActionButton = listMap.isEmpty()
+        )
+    }
+
+    private fun sortByDate(list: ViewPagerAdapterScreenData): ViewPagerAdapterScreenData {
+        return list.copy(
+            userApps = list.userApps.sortedBy {
+                val firstInstallTime = it.packageInfo.firstInstallTime
+                val result = Date(firstInstallTime)
+                result
+            },
+            systemApps = list.systemApps.sortedBy {
+                val firstInstallTime = it.packageInfo.firstInstallTime
+                val result = Date(firstInstallTime)
+                result
+            },
+            showActionButton = listMap.isEmpty()
+        )
+    }
+
+    private fun sortBySize(list: ViewPagerAdapterScreenData): ViewPagerAdapterScreenData {
+        return list.copy(
+            userApps = list.userApps.sortedBy { File(it.packageInfo.applicationInfo.sourceDir).length() },
+            systemApps = list.systemApps.sortedBy { File(it.packageInfo.applicationInfo.sourceDir).length() },
+            showActionButton = listMap.isEmpty()
+        )
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val list = getInstalledApps()
         when (item.itemId) {
             R.id.sortByName -> {
 
-                val filteredList = list.copy(
-                    userApps = list.userApps.sortedBy { it.name },
-                    systemApps = list.systemApps.sortedBy { it.name },
-                    showActionButton = listMap.isEmpty()
-                )
-                homeAdapter?.updateData(filteredList)
+                currentSortingType = SortingType.SORT_BY_NAME
+                homeAdapter?.updateData(getInstalledApps())
             }
 
             R.id.sortByDate -> {
-                val filteredList = list.copy(
-                    userApps = list.userApps.sortedBy {
-                        val firstInstallTime = it.packageInfo.firstInstallTime
-                        val result = Date(firstInstallTime)
-                        result
-                    },
-                    systemApps = list.systemApps.sortedBy {
-                        val firstInstallTime = it.packageInfo.firstInstallTime
-                        val result = Date(firstInstallTime)
-                        result
-                    },
-                    showActionButton = listMap.isEmpty()
-                )
-                homeAdapter?.updateData(filteredList)
+                currentSortingType = SortingType.SORT_BY_DATE
+                homeAdapter?.updateData(getInstalledApps())
             }
 
             R.id.sortBySize -> {
-                val filteredList = list.copy(
-                    userApps = list.userApps.sortedBy { File(it.packageInfo.applicationInfo.sourceDir).length() },
-                    systemApps = list.systemApps.sortedBy { File(it.packageInfo.applicationInfo.sourceDir).length() },
-                    showActionButton = listMap.isEmpty()
-                )
-                homeAdapter?.updateData(filteredList)
+                currentSortingType = SortingType.SORT_BY_SIZE
+                homeAdapter?.updateData(getInstalledApps())
             }
         }
         return super.onOptionsItemSelected(item)
@@ -287,9 +324,11 @@ class MainActivity : AppCompatActivity(), AppActivityController {
                 append(" SELECTED APPS")
             }
         }
-        return ViewPagerAdapterScreenData(
-            systemApps = systemPack,
-            userApps = userPack
+        return sortList(
+            ViewPagerAdapterScreenData(
+                systemApps = systemPack,
+                userApps = userPack
+            )
         )
     }
 
