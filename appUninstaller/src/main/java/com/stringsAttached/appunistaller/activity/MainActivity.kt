@@ -116,7 +116,8 @@ class MainActivity : AppCompatActivity(), AppActivityController {
             },
             systemApps = list.systemApps.filter { packageInfoContainer ->
                 packageInfoContainer.name?.lowercase()?.contains(query) == true
-            }
+            },
+            showActionButton = listMap.isEmpty()
         )
         (homeAdapter as DemoCollectionPagerAdapter).updateData(filteredList)
     }
@@ -144,7 +145,9 @@ class MainActivity : AppCompatActivity(), AppActivityController {
                         DemoCollectionPagerAdapter(supportFragmentManager, getInstalledApps())
                     adapter = homeAdapter
                 } else {
-                    (homeAdapter as DemoCollectionPagerAdapter).updateData(getInstalledApps())
+                    (homeAdapter as DemoCollectionPagerAdapter).updateData(
+                        screenData = getInstalledApps().copy(showActionButton = listMap.isEmpty())
+                    )
                 }
             }
             binding.tabLayout.setupWithViewPager(binding.recyclerView)
@@ -206,9 +209,16 @@ class MainActivity : AppCompatActivity(), AppActivityController {
 
             }
         }
-        binding.title.text = buildString {
-            append(systemPack.size + userPack.size)
-            append(" INSTALLED APPS")
+        if(listMap.isEmpty()) {
+            binding.title.text = buildString {
+                append(systemPack.size + userPack.size)
+                append(" INSTALLED APPS")
+            }
+        } else {
+            binding.title.text = buildString {
+                append(listMap.size)
+                append(" SELECTED APPS")
+            }
         }
         return ViewPagerAdapterScreenData(
             systemApps = systemPack,

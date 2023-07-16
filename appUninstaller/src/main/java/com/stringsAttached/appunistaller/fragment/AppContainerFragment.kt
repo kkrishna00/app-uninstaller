@@ -102,14 +102,14 @@ class AppContainerFragment : Fragment(), AppActivityController {
 data class ViewPagerAdapterScreenData(
     val userApps: List<PackageInfoContainer>,
     val systemApps: List<PackageInfoContainer>,
-    val showActionButton: Boolean = true
+    val showActionButton: Boolean = false
 ) : java.io.Serializable, Parcelable
 
 @Parcelize
 data class FragmentScreenData(
     val installedApps: List<PackageInfoContainer>,
     val userApp: Boolean,
-    val showActionButton: Boolean
+    val showActionButton: Boolean = false
 ) : java.io.Serializable, Parcelable
 
 
