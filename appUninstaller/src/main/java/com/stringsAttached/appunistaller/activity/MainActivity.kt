@@ -137,10 +137,23 @@ class MainActivity : AppCompatActivity(), AppActivityController {
             FilterType.SEARCH -> {
                 filtererSearchList(screenData)
             }
+
+            FilterType.SHOW_SELECTED_APPS -> {
+                selectedApps(screenData)
+            }
         }
     }
 
-    private fun filtererSearchList(list: ViewPagerAdapterScreenData): ViewPagerAdapterScreenData {
+    private fun selectedApps(list: ViewPagerAdapterScreenData): ViewPagerAdapterScreenData {
+        return list.copy(
+            userApps = list.userApps.filter { packageInfoContainer ->
+                listMap.contains(packageInfoContainer.packageInfo.packageName)
+            },
+            showActionButton = listMap.isEmpty()
+        )
+    }
+
+     private fun filtererSearchList(list: ViewPagerAdapterScreenData): ViewPagerAdapterScreenData {
         return list.copy(
             userApps = list.userApps.filter { packageInfoContainer ->
                 packageInfoContainer.name?.lowercase()?.contains(currentQuery) == true
@@ -199,6 +212,20 @@ class MainActivity : AppCompatActivity(), AppActivityController {
 
             R.id.sortBySize -> {
                 currentSortingType = FilterType.SORT_BY_SIZE
+                homeAdapter?.updateData(getInstalledApps())
+            }
+
+            R.id.selectedApps -> {
+                if(listMap.isEmpty()) {
+                    Toast.makeText(this, "No apps selected", Toast.LENGTH_SHORT).show()
+                } else {
+                    currentSortingType = FilterType.SHOW_SELECTED_APPS
+                    homeAdapter?.updateData(getInstalledApps())
+                }
+            }
+
+            R.id.showAll -> {
+                currentSortingType = FilterType.DEFAULT
                 homeAdapter?.updateData(getInstalledApps())
             }
         }
@@ -419,6 +446,7 @@ class MainActivity : AppCompatActivity(), AppActivityController {
         } else {
             listMap.remove(packageInfo.packageInfo.packageName)
             if (listMap.isEmpty()) {
+                currentSortingType = FilterType.DEFAULT
                 binding.fabDeleteButton.visibility = View.GONE
                 homeAdapter?.updateData(
                     screenData = getInstalledApps().copy(showActionButton = true)

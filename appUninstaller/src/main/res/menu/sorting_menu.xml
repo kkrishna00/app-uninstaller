@@ -23,6 +23,14 @@
         android:title="@string/sort_by_date" />
 
     <item
+        android:id="@+id/selectedApps"
+        android:title="@string/selected_apps" />
+
+    <item
+        android:id="@+id/showAll"
+        android:title="@string/show_all" />
+
+    <item
         android:id="@+id/exitApp"
         android:title="Exit" />
 </menu>
