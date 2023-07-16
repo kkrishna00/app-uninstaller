@@ -9,7 +9,9 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -30,6 +32,8 @@ import com.stringsAttached.appunistaller.viewPager.DemoCollectionPagerAdapter
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
+import java.text.DateFormat
+import java.util.Date
 
 
 class MainActivity : AppCompatActivity(), AppActivityController {
@@ -60,6 +64,48 @@ class MainActivity : AppCompatActivity(), AppActivityController {
             R.drawable.baseline_sort_24
         )
         binding.toolbar.overflowIcon = drawable
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val list = getInstalledApps()
+        when (item.itemId) {
+            R.id.sortByName -> {
+
+                val filteredList = list.copy(
+                    userApps = list.userApps.sortedBy { it.name },
+                    systemApps = list.systemApps.sortedBy { it.name },
+                    showActionButton = listMap.isEmpty()
+                )
+                homeAdapter?.updateData(filteredList)
+            }
+
+            R.id.sortByDate -> {
+                val filteredList = list.copy(
+                    userApps = list.userApps.sortedBy {
+                        val firstInstallTime = it.packageInfo.firstInstallTime
+                        val result = Date(firstInstallTime)
+                        result
+                    },
+                    systemApps = list.systemApps.sortedBy {
+                        val firstInstallTime = it.packageInfo.firstInstallTime
+                        val result = Date(firstInstallTime)
+                        result
+                    },
+                    showActionButton = listMap.isEmpty()
+                )
+                homeAdapter?.updateData(filteredList)
+            }
+
+            R.id.sortBySize -> {
+                val filteredList = list.copy(
+                    userApps = list.userApps.sortedBy { File(it.packageInfo.applicationInfo.sourceDir).length() },
+                    systemApps = list.systemApps.sortedBy { File(it.packageInfo.applicationInfo.sourceDir).length() },
+                    showActionButton = listMap.isEmpty()
+                )
+                homeAdapter?.updateData(filteredList)
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

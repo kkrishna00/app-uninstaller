@@ -21,4 +21,8 @@
     <item
         android:id="@+id/sortByDate"
         android:title="@string/sort_by_date" />
+
+    <item
+        android:id="@+id/exitApp"
+        android:title="Exit" />
 </menu>
