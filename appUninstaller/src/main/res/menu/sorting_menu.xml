@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/search"
+        android:icon="@drawable/baseline_search_24"
+        android:title="@string/search"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView" />
+
+    <item
+        android:id="@+id/sortByName"
+        android:actionLayout="@layout/activity_main"
+        android:title="@string/sort_by_name"/>
+
+    <item
+        android:id="@+id/sortBySize"
+        android:title="@string/sort_by_size" />
+
+    <item
+        android:id="@+id/sortByDate"
+        android:title="@string/sort_by_date" />
+</menu>

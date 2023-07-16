@@ -9,20 +9,24 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.view.Menu
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
+import androidx.core.view.MenuItemCompat
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
+import com.stringsAttached.appunistaller.R
 import com.stringsAttached.appunistaller.Utils.MemoryStatus
 import com.stringsAttached.appunistaller.Utils.MemoryStatus.bytesToHuman
 import com.stringsAttached.appunistaller.databinding.ActivityMainBinding
 import com.stringsAttached.appunistaller.fragment.ViewPagerAdapterScreenData
+import com.stringsAttached.appunistaller.pojo.AppActivityController
 import com.stringsAttached.appunistaller.pojo.PackageInfoContainer
 import com.stringsAttached.appunistaller.viewPager.DemoCollectionPagerAdapter
-import com.google.android.material.snackbar.Snackbar
-import com.stringsAttached.appunistaller.pojo.AppActivityController
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
@@ -44,10 +48,28 @@ class MainActivity : AppCompatActivity(), AppActivityController {
         showInfo()
         supportActionBar?.hide()
         setSupportActionBar(binding.toolbar)
+        setOverflowIcon()
         setupMemoryStatus()
-        setupSearch()
         setupStatusBar()
         setupFabButtonListener()
+    }
+
+    private fun setOverflowIcon() {
+        val drawable = ContextCompat.getDrawable(
+            applicationContext,
+            R.drawable.baseline_sort_24
+        )
+        binding.toolbar.overflowIcon = drawable
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.sorting_menu, menu)
+        val searchItem = menu.findItem(R.id.search)
+        if (searchItem != null) {
+            val searchView = MenuItemCompat.getActionView(searchItem) as SearchView
+            setupSearch(searchView)
+        }
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -73,9 +95,8 @@ class MainActivity : AppCompatActivity(), AppActivityController {
         window?.statusBarColor = Color.parseColor("#FF018786")
     }
 
-    private fun setupSearch() {
-        binding.searchIcon.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
-            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+    private fun setupSearch(searchView: SearchView) {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 lifecycleScope.launch {
                     delay(300L)
@@ -95,7 +116,7 @@ class MainActivity : AppCompatActivity(), AppActivityController {
                         filterList(newText.lowercase())
                     } else if (newText.isEmpty()) {
                         setupRv()
-                        hideSoftKeyboard(binding.searchIcon)
+                        hideSoftKeyboard(searchView)
                     }
                 }
                 return false
@@ -209,7 +230,7 @@ class MainActivity : AppCompatActivity(), AppActivityController {
 
             }
         }
-        if(listMap.isEmpty()) {
+        if (listMap.isEmpty()) {
             binding.title.text = buildString {
                 append(systemPack.size + userPack.size)
                 append(" INSTALLED APPS")
