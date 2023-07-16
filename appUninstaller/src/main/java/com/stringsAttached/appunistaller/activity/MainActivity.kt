@@ -50,6 +50,11 @@ class MainActivity : AppCompatActivity(), AppActivityController {
         setupFabButtonListener()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.clear()
+    }
+
     private fun setupFabButtonListener() {
         binding.fabDeleteButton.visibility = View.GONE
         binding.fabDeleteButton.setOnClickListener {
