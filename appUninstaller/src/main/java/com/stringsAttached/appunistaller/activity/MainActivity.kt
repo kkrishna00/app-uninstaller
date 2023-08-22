@@ -51,13 +51,17 @@ class MainActivity : AppCompatActivity(), AppActivityController {
 
     private var listMap = mutableMapOf<String, PackageInfoContainer>()
 
+    private lateinit var getInstalledApps: ViewPagerAdapterScreenData
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        getInstalledApps = getInstalledApps()
         setupRv()
         showInfo()
         supportActionBar?.hide()
+        handleSortingViewsVisibilityChange()
         setupSortingViews()
         setSupportActionBar(binding.toolbar)
         setOverflowIcon()
@@ -105,7 +109,31 @@ class MainActivity : AppCompatActivity(), AppActivityController {
     }
 
     private fun setupSortingViews() {
-        binding.sortingViewContainer.visibility = View.GONE
+        binding.sortingViewUp.setOnClickListener {
+            binding.sortingViewUp.visibility = View.GONE
+            binding.sortingViewDown.visibility = View.VISIBLE
+            homeAdapter?.updateData(descendingOrder(getInstalledApps))
+        }
+
+        binding.sortingViewDown.setOnClickListener {
+            binding.sortingViewUp.visibility = View.VISIBLE
+            binding.sortingViewDown.visibility = View.GONE
+            homeAdapter?.updateData(ascendingOrder(getInstalledApps))
+        }
+    }
+
+    private fun handleSortingViewsVisibilityChange() {
+        if (currentSortingType in listOf(
+                FilterType.SORT_BY_NAME,
+                FilterType.SORT_BY_DATE,
+                FilterType.SORT_BY_SIZE
+            )
+        ) {
+            binding.sortingViewUp.visibility = View.VISIBLE
+            binding.sortingViewDown.visibility = View.GONE
+        } else {
+            binding.sortingViewContainer.visibility = View.GONE
+        }
     }
 
     private fun setOverflowIcon() {
@@ -117,6 +145,9 @@ class MainActivity : AppCompatActivity(), AppActivityController {
     }
 
     private fun sortList(screenData: ViewPagerAdapterScreenData): ViewPagerAdapterScreenData {
+
+        handleSortingViewsVisibilityChange()
+
         return when (currentSortingType) {
             FilterType.SORT_BY_NAME -> {
                 sortByName(screenData)
@@ -144,6 +175,22 @@ class MainActivity : AppCompatActivity(), AppActivityController {
         }
     }
 
+    private fun ascendingOrder(list: ViewPagerAdapterScreenData): ViewPagerAdapterScreenData {
+        return list.copy(
+            userApps = list.userApps,
+            systemApps = list.systemApps,
+            showActionButton = listMap.isEmpty()
+        )
+    }
+
+    private fun descendingOrder(list: ViewPagerAdapterScreenData): ViewPagerAdapterScreenData {
+        return list.copy(
+            userApps = list.userApps.reversed(),
+            systemApps = list.systemApps.reversed(),
+            showActionButton = listMap.isEmpty()
+        )
+    }
+
     private fun selectedApps(list: ViewPagerAdapterScreenData): ViewPagerAdapterScreenData {
         return list.copy(
             userApps = list.userApps.filter { packageInfoContainer ->
@@ -153,7 +200,7 @@ class MainActivity : AppCompatActivity(), AppActivityController {
         )
     }
 
-     private fun filtererSearchList(list: ViewPagerAdapterScreenData): ViewPagerAdapterScreenData {
+    private fun filtererSearchList(list: ViewPagerAdapterScreenData): ViewPagerAdapterScreenData {
         return list.copy(
             userApps = list.userApps.filter { packageInfoContainer ->
                 packageInfoContainer.name?.lowercase()?.contains(currentQuery) == true
@@ -202,31 +249,36 @@ class MainActivity : AppCompatActivity(), AppActivityController {
             R.id.sortByName -> {
 
                 currentSortingType = FilterType.SORT_BY_NAME
-                homeAdapter?.updateData(getInstalledApps())
+                homeAdapter?.updateData(sortList(getInstalledApps))
             }
 
             R.id.sortByDate -> {
                 currentSortingType = FilterType.SORT_BY_DATE
-                homeAdapter?.updateData(getInstalledApps())
+                homeAdapter?.updateData(sortList(getInstalledApps))
             }
 
             R.id.sortBySize -> {
                 currentSortingType = FilterType.SORT_BY_SIZE
-                homeAdapter?.updateData(getInstalledApps())
+                homeAdapter?.updateData(sortList(getInstalledApps))
             }
 
             R.id.selectedApps -> {
-                if(listMap.isEmpty()) {
+                if (listMap.isEmpty()) {
                     Toast.makeText(this, "No apps selected", Toast.LENGTH_SHORT).show()
                 } else {
                     currentSortingType = FilterType.SHOW_SELECTED_APPS
-                    homeAdapter?.updateData(getInstalledApps())
+                    homeAdapter?.updateData(sortList(getInstalledApps))
                 }
             }
 
             R.id.showAll -> {
                 currentSortingType = FilterType.DEFAULT
-                homeAdapter?.updateData(getInstalledApps())
+                homeAdapter?.updateData(sortList(getInstalledApps))
+            }
+
+            R.id.refresh -> {
+                currentSortingType = FilterType.DEFAULT
+                setupRv()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -311,7 +363,7 @@ class MainActivity : AppCompatActivity(), AppActivityController {
     }
 
     private fun filterList(query: String) {
-        val list = getInstalledApps()
+        val list = sortList(getInstalledApps)
         val filteredList = list.copy(
             userApps = list.userApps.filter { packageInfoContainer ->
                 packageInfoContainer.name?.lowercase()?.contains(query) == true
@@ -337,18 +389,20 @@ class MainActivity : AppCompatActivity(), AppActivityController {
     override fun onResume() {
         super.onResume()
         setupRv()
+        handleSortingViewsVisibilityChange()
     }
 
     private fun setupRv() {
         try {
+            getInstalledApps = getInstalledApps()
             binding.recyclerView.apply {
                 if (homeAdapter == null) {
                     homeAdapter =
-                        DemoCollectionPagerAdapter(supportFragmentManager, getInstalledApps())
+                        DemoCollectionPagerAdapter(supportFragmentManager, getInstalledApps)
                     adapter = homeAdapter
                 } else {
                     (homeAdapter as DemoCollectionPagerAdapter).updateData(
-                        screenData = getInstalledApps().copy(showActionButton = listMap.isEmpty())
+                        screenData = sortList(getInstalledApps).copy(showActionButton = listMap.isEmpty())
                     )
                 }
             }
@@ -422,11 +476,9 @@ class MainActivity : AppCompatActivity(), AppActivityController {
                 append(" SELECTED APPS")
             }
         }
-        return sortList(
-            ViewPagerAdapterScreenData(
-                systemApps = systemPack,
-                userApps = userPack
-            )
+        return ViewPagerAdapterScreenData(
+            systemApps = systemPack,
+            userApps = userPack
         )
     }
 
@@ -434,9 +486,10 @@ class MainActivity : AppCompatActivity(), AppActivityController {
         if (isSelected) {
             listMap[packageInfo.packageInfo.packageName] = packageInfo
             if (listMap.size == 1) {
+                getInstalledApps = getInstalledApps()
                 binding.fabDeleteButton.visibility = View.VISIBLE
                 homeAdapter?.updateData(
-                    screenData = getInstalledApps().copy(showActionButton = false)
+                    screenData = sortList(getInstalledApps).copy(showActionButton = false)
                 )
             }
             binding.title.text = buildString {
@@ -446,17 +499,18 @@ class MainActivity : AppCompatActivity(), AppActivityController {
         } else {
             listMap.remove(packageInfo.packageInfo.packageName)
             if (listMap.isEmpty()) {
-                currentSortingType = if(currentQuery.isEmpty()) {
+                getInstalledApps = getInstalledApps()
+                currentSortingType = if (currentQuery.isEmpty()) {
                     FilterType.DEFAULT
                 } else {
                     FilterType.SEARCH
                 }
                 binding.fabDeleteButton.visibility = View.GONE
                 homeAdapter?.updateData(
-                    screenData = getInstalledApps().copy(showActionButton = true)
+                    screenData = sortList(getInstalledApps).copy(showActionButton = true)
                 )
                 binding.title.text = buildString {
-                    append(getInstalledApps().systemApps.size + getInstalledApps().userApps.size)
+                    append(sortList(getInstalledApps).systemApps.size + sortList(getInstalledApps).userApps.size)
                     append(" INSTALLED APPS")
                 }
             } else {
