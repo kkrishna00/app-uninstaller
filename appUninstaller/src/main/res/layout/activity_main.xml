@@ -11,7 +11,8 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/teal_700"
+        android:background="#4CAF50"
+        app:titleTextColor="@color/black"
         android:fontFamily="sans-serif-condensed-medium"
         app:contentInsetStartWithNavigation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -43,7 +44,7 @@
         android:layout_marginEnd="4dp"
         app:layout_goneMarginEnd="16dp"
         android:background="@drawable/baseline_arrow_upward_24"
-        android:backgroundTint="@color/teal_200"
+        android:backgroundTint="#CDDC39"
         app:layout_constraintEnd_toStartOf="@id/sortingViewDown"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
@@ -54,7 +55,7 @@
         android:layout_marginTop="12dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/baseline_arrow_downward_24"
-        android:backgroundTint="@color/teal_200"
+        android:backgroundTint="#CDDC39"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
@@ -79,7 +80,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/black"
-            app:tabSelectedTextColor="@color/teal_700"
+            app:tabSelectedTextColor="#4CAF50"
             app:tabTextColor="@color/white" />
     </androidx.viewpager.widget.ViewPager>
 
@@ -104,7 +105,7 @@
         android:id="@+id/memoryStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/purple_500"
+        android:background="#9C27B0"
         android:textAlignment="center"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"

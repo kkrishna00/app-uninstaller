@@ -314,7 +314,7 @@ class MainActivity : AppCompatActivity(), AppActivityController {
     }
 
     private fun setupStatusBar() {
-        window?.statusBarColor = Color.parseColor("#FF018786")
+        window?.statusBarColor = Color.parseColor("#4CAF50")
     }
 
     private fun setupSearch(searchView: SearchView) {
