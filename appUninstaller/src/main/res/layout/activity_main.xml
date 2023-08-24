@@ -80,6 +80,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/black"
+            app:tabIndicatorColor="#4CAF50"
             app:tabSelectedTextColor="#4CAF50"
             app:tabTextColor="@color/white" />
     </androidx.viewpager.widget.ViewPager>
@@ -120,7 +121,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         ads:adSize="BANNER"
-        ads:adUnitId="ca-app-pub-5063249550068137~8239816313"
+        ads:adUnitId="ca-app-pub-5063249550068137/8547379986"
         ads:layout_constraintBottom_toBottomOf="parent"
         ads:layout_constraintEnd_toEndOf="parent"
         ads:layout_constraintStart_toStartOf="parent"

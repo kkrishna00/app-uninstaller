@@ -6,9 +6,12 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.content.pm.PackageStats
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.os.UserHandle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -148,7 +151,7 @@ class MainActivity : AppCompatActivity(), AppActivityController {
 
         handleSortingViewsVisibilityChange()
 
-        return when (currentSortingType) {
+        getInstalledApps = when (currentSortingType) {
             FilterType.SORT_BY_NAME -> {
                 sortByName(screenData)
             }
@@ -173,6 +176,8 @@ class MainActivity : AppCompatActivity(), AppActivityController {
                 selectedApps(screenData)
             }
         }
+
+        return getInstalledApps
     }
 
     private fun ascendingOrder(list: ViewPagerAdapterScreenData): ViewPagerAdapterScreenData {
@@ -285,6 +290,8 @@ class MainActivity : AppCompatActivity(), AppActivityController {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        if (listMap.isNotEmpty()) return false
+
         menuInflater.inflate(R.menu.sorting_menu, menu)
         val searchItem = menu.findItem(R.id.search)
         if (searchItem != null) {
@@ -482,6 +489,43 @@ class MainActivity : AppCompatActivity(), AppActivityController {
         )
     }
 
+    fun queryPacakgeSize(context: Context, pkgName: String?) {
+
+        val pm = context.packageManager
+        try {
+            val clz: Class<*> = pm.javaClass
+            val myUserId = UserHandle::class.java.getDeclaredMethod("myUserId")
+            val userID = myUserId.invoke(pm) as Int
+            val getPackageSizeInfo = clz.getDeclaredMethod(
+                "getPackageSizeInfo",
+                String::class.java,
+                Int::class.javaPrimitiveType,
+                IPackageStatsObserver::class.java
+            )
+            getPackageSizeInfo.invoke(pm, pkgName, userID, PkgSizeObserver())
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+    }
+
+    private class PkgSizeObserver : IPackageStatsObserver {
+        /***
+         * @param pStatus
+         * @param succeeded
+         */
+        override
+        fun onGetStatsCompleted(pStats: PackageStats, succeeded: Boolean) {
+            val cachesize = pStats.cacheSize
+            val datasize = pStats.dataSize
+            val codesize = pStats.codeSize
+            val totalsize = cachesize + datasize + codesize
+            Log.i(
+                "KRISHNA", "cachesize--->" + cachesize + " datasize---->"
+                        + datasize + " codeSize---->" + codesize + "KRISHNA" + totalsize.bytesToHuman()
+            )
+        }
+    }
+
     override fun handleCheckBoxClicked(isSelected: Boolean, packageInfo: PackageInfoContainer) {
         if (isSelected) {
             listMap[packageInfo.packageInfo.packageName] = packageInfo
@@ -492,6 +536,8 @@ class MainActivity : AppCompatActivity(), AppActivityController {
                     screenData = sortList(getInstalledApps).copy(showActionButton = false)
                 )
             }
+            binding.sortingViewContainer.visibility = View.GONE
+            invalidateOptionsMenu()
             binding.title.text = buildString {
                 append(listMap.size)
                 append(" SELECTED APPS")
@@ -509,6 +555,7 @@ class MainActivity : AppCompatActivity(), AppActivityController {
                 homeAdapter?.updateData(
                     screenData = sortList(getInstalledApps).copy(showActionButton = true)
                 )
+                invalidateOptionsMenu()
                 binding.title.text = buildString {
                     append(sortList(getInstalledApps).systemApps.size + sortList(getInstalledApps).userApps.size)
                     append(" INSTALLED APPS")
@@ -535,3 +582,6 @@ class MainActivity : AppCompatActivity(), AppActivityController {
     }
 }
 
+interface IPackageStatsObserver {
+    fun onGetStatsCompleted(pStats: PackageStats, succeeded: Boolean)
+}
