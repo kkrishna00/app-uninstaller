@@ -62,7 +62,7 @@
         android:layout_width="70dp"
         android:layout_height="32dp"
         android:background="@drawable/rounded_corner"
-        android:backgroundTint="#2C98F0"
+        android:backgroundTint="#4CAF50"
         android:gravity="center"
         android:text="@string/launch"
         android:textColor="@color/white"

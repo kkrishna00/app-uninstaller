@@ -14,4 +14,6 @@
     <string name="app_uninstaller">App Uninstaller</string>
     <string name="selected_apps">Selected Apps</string>
     <string name="show_all">Show All</string>
+    <string name="exit">Exit</string>
+    <string name="refresh">Refresh</string>
 </resources>

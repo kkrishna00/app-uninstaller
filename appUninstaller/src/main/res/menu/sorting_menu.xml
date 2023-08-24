@@ -31,6 +31,10 @@
         android:title="@string/show_all" />
 
     <item
+        android:id="@+id/refresh"
+        android:title="@string/refresh" />
+
+    <item
         android:id="@+id/exitApp"
-        android:title="Exit" />
+        android:title="@string/exit" />
 </menu>

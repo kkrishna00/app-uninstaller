@@ -6,9 +6,12 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.content.pm.PackageStats
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.os.UserHandle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -51,13 +54,17 @@ class MainActivity : AppCompatActivity(), AppActivityController {
 
     private var listMap = mutableMapOf<String, PackageInfoContainer>()
 
+    private lateinit var getInstalledApps: ViewPagerAdapterScreenData
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        getInstalledApps = getInstalledApps()
         setupRv()
         showInfo()
         supportActionBar?.hide()
+        handleSortingViewsVisibilityChange()
         setupSortingViews()
         setSupportActionBar(binding.toolbar)
         setOverflowIcon()
@@ -105,7 +112,31 @@ class MainActivity : AppCompatActivity(), AppActivityController {
     }
 
     private fun setupSortingViews() {
-        binding.sortingViewContainer.visibility = View.GONE
+        binding.sortingViewUp.setOnClickListener {
+            binding.sortingViewUp.visibility = View.GONE
+            binding.sortingViewDown.visibility = View.VISIBLE
+            homeAdapter?.updateData(descendingOrder(getInstalledApps))
+        }
+
+        binding.sortingViewDown.setOnClickListener {
+            binding.sortingViewUp.visibility = View.VISIBLE
+            binding.sortingViewDown.visibility = View.GONE
+            homeAdapter?.updateData(ascendingOrder(getInstalledApps))
+        }
+    }
+
+    private fun handleSortingViewsVisibilityChange() {
+        if (currentSortingType in listOf(
+                FilterType.SORT_BY_NAME,
+                FilterType.SORT_BY_DATE,
+                FilterType.SORT_BY_SIZE
+            )
+        ) {
+            binding.sortingViewUp.visibility = View.VISIBLE
+            binding.sortingViewDown.visibility = View.GONE
+        } else {
+            binding.sortingViewContainer.visibility = View.GONE
+        }
     }
 
     private fun setOverflowIcon() {
@@ -117,7 +148,10 @@ class MainActivity : AppCompatActivity(), AppActivityController {
     }
 
     private fun sortList(screenData: ViewPagerAdapterScreenData): ViewPagerAdapterScreenData {
-        return when (currentSortingType) {
+
+        handleSortingViewsVisibilityChange()
+
+        getInstalledApps = when (currentSortingType) {
             FilterType.SORT_BY_NAME -> {
                 sortByName(screenData)
             }
@@ -142,6 +176,24 @@ class MainActivity : AppCompatActivity(), AppActivityController {
                 selectedApps(screenData)
             }
         }
+
+        return getInstalledApps
+    }
+
+    private fun ascendingOrder(list: ViewPagerAdapterScreenData): ViewPagerAdapterScreenData {
+        return list.copy(
+            userApps = list.userApps,
+            systemApps = list.systemApps,
+            showActionButton = listMap.isEmpty()
+        )
+    }
+
+    private fun descendingOrder(list: ViewPagerAdapterScreenData): ViewPagerAdapterScreenData {
+        return list.copy(
+            userApps = list.userApps.reversed(),
+            systemApps = list.systemApps.reversed(),
+            showActionButton = listMap.isEmpty()
+        )
     }
 
     private fun selectedApps(list: ViewPagerAdapterScreenData): ViewPagerAdapterScreenData {
@@ -153,7 +205,7 @@ class MainActivity : AppCompatActivity(), AppActivityController {
         )
     }
 
-     private fun filtererSearchList(list: ViewPagerAdapterScreenData): ViewPagerAdapterScreenData {
+    private fun filtererSearchList(list: ViewPagerAdapterScreenData): ViewPagerAdapterScreenData {
         return list.copy(
             userApps = list.userApps.filter { packageInfoContainer ->
                 packageInfoContainer.name?.lowercase()?.contains(currentQuery) == true
@@ -202,37 +254,44 @@ class MainActivity : AppCompatActivity(), AppActivityController {
             R.id.sortByName -> {
 
                 currentSortingType = FilterType.SORT_BY_NAME
-                homeAdapter?.updateData(getInstalledApps())
+                homeAdapter?.updateData(sortList(getInstalledApps))
             }
 
             R.id.sortByDate -> {
                 currentSortingType = FilterType.SORT_BY_DATE
-                homeAdapter?.updateData(getInstalledApps())
+                homeAdapter?.updateData(sortList(getInstalledApps))
             }
 
             R.id.sortBySize -> {
                 currentSortingType = FilterType.SORT_BY_SIZE
-                homeAdapter?.updateData(getInstalledApps())
+                homeAdapter?.updateData(sortList(getInstalledApps))
             }
 
             R.id.selectedApps -> {
-                if(listMap.isEmpty()) {
+                if (listMap.isEmpty()) {
                     Toast.makeText(this, "No apps selected", Toast.LENGTH_SHORT).show()
                 } else {
                     currentSortingType = FilterType.SHOW_SELECTED_APPS
-                    homeAdapter?.updateData(getInstalledApps())
+                    homeAdapter?.updateData(sortList(getInstalledApps))
                 }
             }
 
             R.id.showAll -> {
                 currentSortingType = FilterType.DEFAULT
-                homeAdapter?.updateData(getInstalledApps())
+                homeAdapter?.updateData(sortList(getInstalledApps))
+            }
+
+            R.id.refresh -> {
+                currentSortingType = FilterType.DEFAULT
+                setupRv()
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        if (listMap.isNotEmpty()) return false
+
         menuInflater.inflate(R.menu.sorting_menu, menu)
         val searchItem = menu.findItem(R.id.search)
         if (searchItem != null) {
@@ -262,7 +321,7 @@ class MainActivity : AppCompatActivity(), AppActivityController {
     }
 
     private fun setupStatusBar() {
-        window?.statusBarColor = Color.parseColor("#FF018786")
+        window?.statusBarColor = Color.parseColor("#4CAF50")
     }
 
     private fun setupSearch(searchView: SearchView) {
@@ -311,7 +370,7 @@ class MainActivity : AppCompatActivity(), AppActivityController {
     }
 
     private fun filterList(query: String) {
-        val list = getInstalledApps()
+        val list = sortList(getInstalledApps)
         val filteredList = list.copy(
             userApps = list.userApps.filter { packageInfoContainer ->
                 packageInfoContainer.name?.lowercase()?.contains(query) == true
@@ -337,18 +396,20 @@ class MainActivity : AppCompatActivity(), AppActivityController {
     override fun onResume() {
         super.onResume()
         setupRv()
+        handleSortingViewsVisibilityChange()
     }
 
     private fun setupRv() {
         try {
+            getInstalledApps = getInstalledApps()
             binding.recyclerView.apply {
                 if (homeAdapter == null) {
                     homeAdapter =
-                        DemoCollectionPagerAdapter(supportFragmentManager, getInstalledApps())
+                        DemoCollectionPagerAdapter(supportFragmentManager, getInstalledApps)
                     adapter = homeAdapter
                 } else {
                     (homeAdapter as DemoCollectionPagerAdapter).updateData(
-                        screenData = getInstalledApps().copy(showActionButton = listMap.isEmpty())
+                        screenData = sortList(getInstalledApps).copy(showActionButton = listMap.isEmpty())
                     )
                 }
             }
@@ -422,23 +483,61 @@ class MainActivity : AppCompatActivity(), AppActivityController {
                 append(" SELECTED APPS")
             }
         }
-        return sortList(
-            ViewPagerAdapterScreenData(
-                systemApps = systemPack,
-                userApps = userPack
-            )
+        return ViewPagerAdapterScreenData(
+            systemApps = systemPack,
+            userApps = userPack
         )
+    }
+
+    fun queryPacakgeSize(context: Context, pkgName: String?) {
+
+        val pm = context.packageManager
+        try {
+            val clz: Class<*> = pm.javaClass
+            val myUserId = UserHandle::class.java.getDeclaredMethod("myUserId")
+            val userID = myUserId.invoke(pm) as Int
+            val getPackageSizeInfo = clz.getDeclaredMethod(
+                "getPackageSizeInfo",
+                String::class.java,
+                Int::class.javaPrimitiveType,
+                IPackageStatsObserver::class.java
+            )
+            getPackageSizeInfo.invoke(pm, pkgName, userID, PkgSizeObserver())
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+    }
+
+    private class PkgSizeObserver : IPackageStatsObserver {
+        /***
+         * @param pStatus
+         * @param succeeded
+         */
+        override
+        fun onGetStatsCompleted(pStats: PackageStats, succeeded: Boolean) {
+            val cachesize = pStats.cacheSize
+            val datasize = pStats.dataSize
+            val codesize = pStats.codeSize
+            val totalsize = cachesize + datasize + codesize
+            Log.i(
+                "KRISHNA", "cachesize--->" + cachesize + " datasize---->"
+                        + datasize + " codeSize---->" + codesize + "KRISHNA" + totalsize.bytesToHuman()
+            )
+        }
     }
 
     override fun handleCheckBoxClicked(isSelected: Boolean, packageInfo: PackageInfoContainer) {
         if (isSelected) {
             listMap[packageInfo.packageInfo.packageName] = packageInfo
             if (listMap.size == 1) {
+                getInstalledApps = getInstalledApps()
                 binding.fabDeleteButton.visibility = View.VISIBLE
                 homeAdapter?.updateData(
-                    screenData = getInstalledApps().copy(showActionButton = false)
+                    screenData = sortList(getInstalledApps).copy(showActionButton = false)
                 )
             }
+            binding.sortingViewContainer.visibility = View.GONE
+            invalidateOptionsMenu()
             binding.title.text = buildString {
                 append(listMap.size)
                 append(" SELECTED APPS")
@@ -446,17 +545,19 @@ class MainActivity : AppCompatActivity(), AppActivityController {
         } else {
             listMap.remove(packageInfo.packageInfo.packageName)
             if (listMap.isEmpty()) {
-                currentSortingType = if(currentQuery.isEmpty()) {
+                getInstalledApps = getInstalledApps()
+                currentSortingType = if (currentQuery.isEmpty()) {
                     FilterType.DEFAULT
                 } else {
                     FilterType.SEARCH
                 }
                 binding.fabDeleteButton.visibility = View.GONE
                 homeAdapter?.updateData(
-                    screenData = getInstalledApps().copy(showActionButton = true)
+                    screenData = sortList(getInstalledApps).copy(showActionButton = true)
                 )
+                invalidateOptionsMenu()
                 binding.title.text = buildString {
-                    append(getInstalledApps().systemApps.size + getInstalledApps().userApps.size)
+                    append(sortList(getInstalledApps).systemApps.size + sortList(getInstalledApps).userApps.size)
                     append(" INSTALLED APPS")
                 }
             } else {
@@ -481,3 +582,6 @@ class MainActivity : AppCompatActivity(), AppActivityController {
     }
 }
 
+interface IPackageStatsObserver {
+    fun onGetStatsCompleted(pStats: PackageStats, succeeded: Boolean)
+}

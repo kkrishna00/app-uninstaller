@@ -6,7 +6,7 @@
             <stroke
                 android:width="3dp"
                 android:color="#cccccc" />
-            <solid android:color="#8BC34A" />
+            <solid android:color="#2196F3" />
         </shape>
     </item>
     <item android:drawable="@drawable/baseline_check_24" />
