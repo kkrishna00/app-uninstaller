@@ -10,7 +10,7 @@ data class PackageInfoContainer(
     val packageInfo: PackageInfo,
     val appVersion: String,
     val packageSize: String,
-    val isSelected: Boolean = false,
+    var isSelected: Boolean = false,
 ) : Parcelable, java.io.Serializable
 
 interface AppActivityController {

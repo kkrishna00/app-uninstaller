@@ -56,6 +56,7 @@ class CustomAdapter(
                 val isSelected = viewHolder.binding.radioButtonApp.isSelected
                 viewHolder.binding.radioButtonApp.isSelected = !isSelected
                 viewHolder.binding.radioButtonApp.isChecked = !isSelected
+                dataSet[position].isSelected = viewHolder.binding.radioButtonApp.isChecked
                 appActivityController.handleCheckBoxClicked(viewHolder.binding.radioButtonApp.isChecked, dataSet[position])
             }
         } else {
@@ -140,6 +141,10 @@ class ActionContainerAdapter(
                 }
             }
         }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
     }
 
     override fun getItemCount() = dataSet.size
